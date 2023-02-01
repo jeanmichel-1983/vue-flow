@@ -9,7 +9,7 @@ const type = toRef(props, 'type', 'source')
 
 const { connectionStartHandle, vueFlowRef, nodesConnectable } = $(useVueFlow())
 
-const { id: nodeId, node, nodeEl, connectedEdges } = useNode()
+const { id: nodeId, node, nodeEl, connectedEdges } = $(useNode())
 
 const handle = ref<HTMLDivElement>()
 
@@ -24,7 +24,7 @@ const { handlePointerDown, handleClick } = useHandle({
 
 const isConnectable = computed(() => {
   if (isString(connectable) && connectable === 'single') {
-    return !connectedEdges.value.some((edge) => {
+    return !connectedEdges.some((edge) => {
       const handle = edge[`${type.value}Handle`]
 
       if (edge[type.value] !== nodeId) return false
@@ -32,7 +32,7 @@ const isConnectable = computed(() => {
       return handle ? handle === handleId : true
     })
   } else if (isFunction(connectable)) {
-    return connectable(node, connectedEdges.value)
+    return connectable(node, connectedEdges)
   }
 
   return isDef(connectable) ? connectable : nodesConnectable
@@ -51,7 +51,7 @@ onMounted(() => {
 
       if (!nodeEl || !handle.value || !viewportNode || !handleId) return
 
-      const nodeBounds = nodeEl.value.getBoundingClientRect()
+      const nodeBounds = nodeEl.getBoundingClientRect()
 
       const handleBounds = handle.value.getBoundingClientRect()
 
