@@ -21,13 +21,19 @@ export default function useEdge<Data = ElementData, CustomEvents extends Record<
 
   const edgeEl = computed(() => unref(edgeRef) ?? document.querySelector(`[data-id="${edgeId.value}"]`))
 
-  const edge = computed(() => findEdge<Data, CustomEvents>(edgeId.value)!)
+  const edge = computed(() => findEdge<Data, CustomEvents>(edgeId.value))
 
-  if (!edgeId.value || edgeId.value === '') {
-    warn(`useEdge - No edge id provided and no injection could be found!`)
-  } else if (!edge.value) {
-    warn(`useEdge - Edge with id ${edgeId.value} not found!`)
-  }
+  watch(
+    [() => edge.value?.id, edgeId],
+    ([nextEdge, nextId]) => {
+      if (!nextId || nextId === '') {
+        throw new VueFlowError('useEdge', `No node id provided and no injection could be found!`)
+      } else if (!nextEdge) {
+        throw new VueFlowError('useEdge', `Node with id ${edgeId.value} not found!`)
+      }
+    },
+    { immediate: true },
+  )
 
   return {
     id: edgeId,

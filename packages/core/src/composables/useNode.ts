@@ -21,19 +21,29 @@ export default function useNode<Data = ElementData, CustomEvents extends Record<
 
   const nodeEl = computed(() => unref(nodeRef) ?? document.querySelector(`[data-id="${nodeId.value}"]`))
 
-  const node = computed(() => findNode<Data, CustomEvents>(nodeId.value)!)
+  const node = computed(() => findNode<Data, CustomEvents>(nodeId.value))
 
-  if (!nodeId.value || nodeId.value === '') {
-    warn(`useNode - No node id provided and no injection could be found!`)
-  } else if (!node.value) {
-    warn(`useNode - Node with id ${nodeId.value} not found!`)
-  }
+  const parentNode = computed(() => (node.value?.parentNode ? findNode(node.value.parentNode) : undefined))
+
+  const connectedEdges = computed(() => (node.value ? getConnectedEdges([node.value], getEdges.value) : []))
+
+  watch(
+    [() => node.value?.id, nodeId],
+    ([nextNode, nextId]) => {
+      if (!nextId || nextId === '') {
+        throw new VueFlowError('useNode', `No node id provided and no injection could be found!`)
+      } else if (!nextNode) {
+        throw new VueFlowError('useNode', `Node with id ${nodeId.value} not found!`)
+      }
+    },
+    { immediate: true },
+  )
 
   return {
     id: nodeId,
     nodeEl,
     node,
-    parentNode: computed(() => (node.value.parentNode ? findNode(node.value.parentNode) : undefined)),
-    connectedEdges: computed(() => getConnectedEdges([node.value], getEdges.value)),
+    parentNode,
+    connectedEdges,
   }
 }
