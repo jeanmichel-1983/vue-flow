@@ -1,3 +1,4 @@
+import type { MaybeRef } from '@vueuse/core'
 import type { CustomEvent, ElementData } from '~/types'
 
 /**
@@ -7,23 +8,32 @@ import type { CustomEvent, ElementData } from '~/types'
  *
  * Meaning if you do not provide an id, this composable has to be called in a child of your custom node component, or it will throw
  */
-export default function useNode<Data = ElementData, CustomEvents extends Record<string, CustomEvent> = any>(id?: string) {
-  const nodeId = id ?? inject(NodeId, '')
-  const nodeEl = inject(NodeRef, null)
-
+export default function useNode<Data = ElementData, CustomEvents extends Record<string, CustomEvent> = any>(
+  id?: MaybeRef<string>,
+) {
   const { findNode, getEdges } = useVueFlow()
 
-  const node = findNode<Data, CustomEvents>(nodeId)
+  const nodeIdInjection = inject(NodeId, '')
 
-  if (!node) {
-    throw new Error(`[vue-flow]: useNode - Node with id ${nodeId} not found!`)
+  const nodeId = computed(() => unref(id) ?? nodeIdInjection)
+
+  const nodeRef = inject(NodeRef, null)
+
+  const nodeEl = computed(() => unref(nodeRef) ?? document.querySelector(`[data-id="${nodeId.value}"]`))
+
+  const node = computed(() => findNode<Data, CustomEvents>(nodeId.value)!)
+
+  if (!nodeId.value || nodeId.value === '') {
+    warn(`useNode - No node id provided and no injection could be found!`)
+  } else if (!node.value) {
+    warn(`useNode - Node with id ${nodeId.value} not found!`)
   }
 
   return {
     id: nodeId,
     nodeEl,
     node,
-    parentNode: computed(() => (node.parentNode ? findNode(node.parentNode) : undefined)),
-    connectedEdges: computed(() => getConnectedEdges([node], getEdges.value)),
+    parentNode: computed(() => (node.value.parentNode ? findNode(node.value.parentNode) : undefined)),
+    connectedEdges: computed(() => getConnectedEdges([node.value], getEdges.value)),
   }
 }
