@@ -21,7 +21,7 @@ export default function useNode<Data = ElementData, CustomEvents extends Record<
 
   const nodeEl = computed(() => unref(nodeRef) ?? document.querySelector(`[data-id="${nodeId.value}"]`))
 
-  const node = computed(() => findNode<Data, CustomEvents>(nodeId.value))
+  const node = computed(() => findNode<Data, CustomEvents>(nodeId.value)!)
 
   const parentNode = computed(() => (node.value?.parentNode ? findNode(node.value.parentNode) : undefined))
 

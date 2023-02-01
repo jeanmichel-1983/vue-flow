@@ -21,7 +21,7 @@ export default function useEdge<Data = ElementData, CustomEvents extends Record<
 
   const edgeEl = computed(() => unref(edgeRef) ?? document.querySelector(`[data-id="${edgeId.value}"]`))
 
-  const edge = computed(() => findEdge<Data, CustomEvents>(edgeId.value))
+  const edge = computed(() => findEdge<Data, CustomEvents>(edgeId.value)!)
 
   watch(
     [() => edge.value?.id, edgeId],
