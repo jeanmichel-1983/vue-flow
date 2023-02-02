@@ -32,11 +32,15 @@ export default function useNode<Data = ElementData, CustomEvents extends Record<
     ([nextNode, nextId]) => {
       if (!nextId || nextId === '') {
         throw new VueFlowError('useNode', `No node id provided and no injection could be found!`)
-      } else if (!nextNode) {
-        throw new VueFlowError('useNode', `Node with id ${nodeId.value} not found!`)
       }
+
+      nextTick(() => {
+        if (!nextNode) {
+          throw new VueFlowError('useNode', `Node with id ${nodeId.value} not found!`)
+        }
+      })
     },
-    { immediate: true },
+    { immediate: true, flush: 'post' },
   )
 
   return {
