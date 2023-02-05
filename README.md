@@ -7,7 +7,6 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/bcakmakoglu/vue-flow)
 
 __Vue Flow: A highly customizable Vue 3 Flowchart component.__
-
 With Vue Flow, you can build your own, customized node-based applications like static diagrams or even more complex and
 interactive editors!
 
