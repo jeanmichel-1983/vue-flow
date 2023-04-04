@@ -123,11 +123,6 @@ export default (options?: FlowProps): VueFlowStore => {
     if (options) vueFlow.setState(options)
   }
 
-  /**
-   * Vue flow wasn't able to find any store instance - we can't proceed
-   */
-  if (!vueFlow) throw new Error('[vueflow]: store instance not found.')
-
   // always provide a fresh instance into context on call
   if (scope) {
     provide(VueFlow, vueFlow)
@@ -137,11 +132,15 @@ export default (options?: FlowProps): VueFlowStore => {
     if (isParentScope) {
       // dispose of state values and storage entry
       tryOnScopeDispose(() => {
-        if (storage.get(vueFlow!.id)) {
-          vueFlow!.$destroy()
-        }
+        if (vueFlow) {
+          const storedInstance = storage.get(vueFlow.id)
 
-        vueFlow = null
+          if (storedInstance) {
+            storedInstance.$destroy()
+          } else {
+            warn(`No store instance found for id ${vueFlow.id} in storage.`)
+          }
+        }
       })
     }
   }

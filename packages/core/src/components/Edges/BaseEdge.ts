@@ -1,5 +1,5 @@
 import { isNumber } from '@vueuse/core'
-import type { FunctionalComponent } from 'vue'
+import type { Component, FunctionalComponent } from 'vue'
 import EdgeText from './EdgeText.vue'
 import type { BaseEdgeProps } from '~/types'
 
@@ -41,7 +41,7 @@ const BaseEdge: FunctionalComponent<BaseEdgeProps> = function (
         })
       : null,
     label && isNumber(labelX) && isNumber(labelY)
-      ? h(EdgeText, {
+      ? h(EdgeText as Component, {
           x: labelX,
           y: labelY,
           label,
@@ -71,5 +71,6 @@ BaseEdge.props = [
 ]
 
 BaseEdge.inheritAttrs = false
+BaseEdge.compatConfig = { MODE: 3 }
 
 export default BaseEdge

@@ -18,7 +18,14 @@ export interface ConnectionHandle {
   y: number
 }
 
-export interface StartHandle {
+export interface ValidHandleResult {
+  endHandle: ConnectingHandle | null
+  handleDomNode: Element | null
+  isValid: boolean
+  connection: Connection
+}
+
+export interface ConnectingHandle {
   nodeId: string
   type: HandleType
   handleId: string | null
@@ -50,6 +57,10 @@ export interface HandleProps {
   position?: Position
   /** A valid connection func {@link ValidConnectionFunc} */
   isValidConnection?: ValidConnectionFunc
-  /** Enable/disable connecting to handle */
+  /** Enable/disable connecting to handle altogether */
   connectable?: HandleConnectable
+  /** Can this handle be used to *start* a connection */
+  connectableStart?: boolean
+  /** Can this handle be used to *end* a connection */
+  connectableEnd?: boolean
 }

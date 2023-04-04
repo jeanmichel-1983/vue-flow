@@ -40,8 +40,8 @@ const dark = ref(false)
  * To update node properties you can simply use your elements v-model and mutate the elements directly
  * Changes should always be reflected on the graph reactively, without the need to overwrite the elements
  */
-const updatePos = () =>
-  elements.value.forEach((el) => {
+function updatePos() {
+  return elements.value.forEach((el) => {
     if (isNode(el)) {
       el.position = {
         x: Math.random() * 400,
@@ -49,22 +49,29 @@ const updatePos = () =>
       }
     }
   })
+}
 
 /**
  * toObject transforms your current graph data to an easily persist-able object
  */
-const logToObject = () => console.log(toObject())
+function logToObject() {
+  return console.log(toObject())
+}
 
 /**
  * Resets the current viewpane transformation (zoom & pan)
  */
-const resetTransform = () => setTransform({ x: 0, y: 0, zoom: 1 })
+function resetTransform() {
+  return setTransform({ x: 0, y: 0, zoom: 1 })
+}
 
-const toggleClass = () => (dark.value = !dark.value)
+function toggleClass() {
+  return (dark.value = !dark.value)
+}
 </script>
 
 <template>
-  <VueFlow v-model="elements" :class="{ dark }" class="basicflow" :default-zoom="1.5" :min-zoom="0.2" :max-zoom="4">
+  <VueFlow v-model="elements" :class="{ dark }" class="basicflow" :default-viewport="{ zoom: 1.5 }" :min-zoom="0.2" :max-zoom="4">
     <Background :pattern-color="dark ? '#FFFFFB' : '#aaa'" gap="8" />
     <MiniMap />
     <Controls />

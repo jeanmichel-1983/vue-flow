@@ -2,11 +2,13 @@ import { ConnectionMode } from '~/types'
 import type {
   Actions,
   Connection,
+  ConnectionStatus,
   GraphEdge,
   GraphNode,
   HandleType,
   NodeHandleBounds,
   ValidConnectionFunc,
+  ValidHandleResult,
   XYPosition,
 } from '~/types'
 
@@ -19,8 +21,7 @@ export interface ConnectionHandle {
 }
 
 export function resetRecentHandle(handleDomNode: Element): void {
-  handleDomNode?.classList.remove('vue-flow__handle-valid')
-  handleDomNode?.classList.remove('vue-flow__handle-connecting')
+  handleDomNode?.classList.remove('valid', 'connecting', 'vue-flow__handle-valid', 'vue-flow__handle-connecting')
 }
 
 // this functions collects all handles and adds an absolute position
@@ -37,8 +38,14 @@ export function getHandles(
         id: h.id || null,
         type,
         nodeId: node.id,
-        x: (node.computedPosition?.x ?? 0) + h.x + h.width / 2,
-        y: (node.computedPosition?.y ?? 0) + h.y + h.height / 2,
+        ...getHandlePosition(
+          h.position,
+          {
+            ...node.dimensions,
+            ...node.computedPosition,
+          },
+          h,
+        ),
       })
     }
     return res
@@ -64,12 +71,6 @@ export function getClosestHandle(
   return closestHandle
 }
 
-interface Result {
-  handleDomNode: Element | null
-  isValid: boolean
-  connection: Connection
-}
-
 // checks if  and returns connection in fom of an object { source: 123, target: 312 }
 export function isValidHandle(
   event: MouseEvent | TouchEvent,
@@ -77,7 +78,7 @@ export function isValidHandle(
   connectionMode: ConnectionMode,
   fromNodeId: string,
   fromHandleId: string | null,
-  fromType: string,
+  fromType: HandleType,
   isValidConnection: ValidConnectionFunc,
   doc: Document | ShadowRoot,
   edges: GraphEdge[],
@@ -90,32 +91,45 @@ export function isValidHandle(
   const handleBelow = doc.elementFromPoint(x, y)
   const handleToCheck = handleBelow?.classList.contains('vue-flow__handle') ? handleBelow : handleDomNode
 
-  const result: Result = {
+  const result: ValidHandleResult = {
     handleDomNode: handleToCheck,
     isValid: false,
     connection: { source: '', target: '', sourceHandle: null, targetHandle: null },
+    endHandle: null,
   }
 
-  if (handleDomNode && handle) {
-    const handleNodeId = handleDomNode.getAttribute('data-nodeid')
-    const handleId = handleDomNode.getAttribute('data-handleid')
+  if (handleToCheck) {
+    const handleType = getHandleType(undefined, handleToCheck)
+    const handleNodeId = handleToCheck.getAttribute('data-nodeid')!
+    const handleId = handleToCheck.getAttribute('data-handleid')
+    const connectable = handleToCheck.classList.contains('connectable')
+    const connectableEnd = handleToCheck.classList.contains('connectableend')
 
     const connection: Connection = {
-      source: isTarget ? handle.nodeId : fromNodeId,
+      source: isTarget ? handleNodeId : fromNodeId,
       sourceHandle: isTarget ? handleId : fromHandleId,
-      target: isTarget ? fromNodeId : handle.nodeId,
+      target: isTarget ? fromNodeId : handleNodeId,
       targetHandle: isTarget ? fromHandleId : handleId,
     }
 
     result.connection = connection
 
+    const isConnectable = connectable && connectableEnd
+
     // in strict mode we don't allow target to target or source to source connections
     const isValid =
-      connectionMode === ConnectionMode.Strict
-        ? (isTarget && handle.type === 'source') || (!isTarget && handle.type === 'target')
-        : handleNodeId !== fromNodeId || handleId !== fromHandleId
+      isConnectable &&
+      (connectionMode === ConnectionMode.Strict
+        ? (isTarget && handleType === 'source') || (!isTarget && handleType === 'target')
+        : handleNodeId !== fromNodeId || handleId !== fromHandleId)
 
     if (isValid) {
+      result.endHandle = {
+        nodeId: handleNodeId,
+        handleId,
+        type: handleType as HandleType,
+      }
+
       result.isValid = isValidConnection(connection, {
         edges,
         sourceNode: findNode(connection.source)!,
@@ -160,4 +174,16 @@ export function getHandleType(edgeUpdaterType: HandleType | undefined, handleDom
   }
 
   return null
+}
+
+export function getConnectionStatus(isInsideConnectionRadius: boolean, isHandleValid: boolean) {
+  let connectionStatus: ConnectionStatus | null = null
+
+  if (isHandleValid) {
+    connectionStatus = 'valid'
+  } else if (isInsideConnectionRadius && !isHandleValid) {
+    connectionStatus = 'invalid'
+  }
+
+  return connectionStatus
 }

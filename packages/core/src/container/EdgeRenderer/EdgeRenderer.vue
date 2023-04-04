@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import type { WatchStopHandle } from 'vue'
 import EdgeWrapper from '../../components/Edges/EdgeWrapper'
 import ConnectionLine from '../../components/ConnectionLine/ConnectionLine.vue'
 import type { EdgeComponent, EdgeUpdatable, GraphEdge } from '../../types'
@@ -8,7 +7,6 @@ import MarkerDefinitions from './MarkerDefinitions.vue'
 const slots = inject(Slots)
 
 const {
-  onPaneReady,
   connectionStartHandle,
   nodesConnectable,
   edgesUpdatable,
@@ -19,61 +17,51 @@ const {
   getEdges,
   getNodesInitialized,
   getEdgeTypes,
-  noPanClassName,
   elevateEdgesOnSelect,
+  dimensions,
+  emits,
 } = $(useVueFlow())
 
-const selectable = (s?: boolean) => (typeof s === 'undefined' ? elementsSelectable : s)
-const updatable = (u?: EdgeUpdatable) => (typeof u === 'undefined' ? edgesUpdatable : u)
-const focusable = (f?: boolean) => (typeof f === 'undefined' ? edgesFocusable : f)
+const sourceNode = controlledComputed(
+  () => connectionStartHandle?.nodeId,
+  () => {
+    if (connectionStartHandle?.nodeId) return findNode(connectionStartHandle.nodeId)
 
-const sourceNode = $(
-  controlledComputed(
-    () => connectionStartHandle?.nodeId,
-    () => {
-      if (connectionStartHandle?.nodeId) return findNode(connectionStartHandle.nodeId)
-
-      return false
-    },
-  ),
+    return false
+  },
 )
 
-const connectionLineVisible = $(
-  controlledComputed(
-    () => connectionStartHandle?.nodeId,
-    () =>
-      !!(
-        sourceNode &&
-        (typeof sourceNode.connectable === 'undefined' ? nodesConnectable : sourceNode.connectable) &&
-        connectionStartHandle?.nodeId &&
-        connectionStartHandle?.type
-      ),
-  ),
+const connectionLineVisible = controlledComputed(
+  () => connectionStartHandle?.nodeId,
+  () =>
+    !!(
+      sourceNode.value &&
+      (typeof sourceNode.value.connectable === 'undefined' ? nodesConnectable : sourceNode.value.connectable) &&
+      connectionStartHandle?.nodeId &&
+      connectionStartHandle?.type
+    ),
 )
 
-let groups = $ref<ReturnType<typeof groupEdgesByZLevel>>([])
+const groups = controlledComputed(
+  [
+    () => getEdges.map((e) => e.zIndex),
+    () => (elevateEdgesOnSelect ? [getSelectedNodes.length] : [0]),
+    () => (elevateEdgesOnSelect ? getNodesInitialized.map((n) => n.computedPosition.z) : []),
+  ],
+  () => groupEdgesByZLevel(getEdges, findNode, elevateEdgesOnSelect),
+)
 
-let stop: WatchStopHandle
-onPaneReady(() => {
-  stop = watch(
-    [
-      () => getEdges.length,
-      () => getEdges.map((e) => e.zIndex),
-      () => (elevateEdgesOnSelect ? getSelectedNodes.length : 0),
-      () => (elevateEdgesOnSelect ? getNodesInitialized.map((n) => n.computedPosition.z) : []),
-    ],
-    () => {
-      groups = groupEdgesByZLevel(getEdges, findNode, elevateEdgesOnSelect)
-    },
-    { immediate: true },
-  )
-})
+function selectable(edgeSelectable?: boolean) {
+  return typeof edgeSelectable === 'undefined' ? elementsSelectable : edgeSelectable
+}
+function updatable(edgeUpdatable?: EdgeUpdatable) {
+  return typeof edgeUpdatable === 'undefined' ? edgesUpdatable : edgeUpdatable
+}
+function focusable(edgeFocusable?: boolean) {
+  return typeof edgeFocusable === 'undefined' ? edgesFocusable : edgeFocusable
+}
 
-onBeforeUnmount(() => {
-  stop?.()
-})
-
-const getType = (type?: string, template?: GraphEdge['template']) => {
+function getType(type?: string, template?: GraphEdge['template']) {
   const name = type || 'default'
   let edgeType = template ?? getEdgeTypes[name]
   const instance = getCurrentInstance()
@@ -90,28 +78,29 @@ const getType = (type?: string, template?: GraphEdge['template']) => {
 
   const slot = slots?.[`edge-${name}`]
   if (!slot) {
-    warn(`Edge type "${type}" not found and no edge-slot detected. Using fallback type "default".`)
+    emits.error(new VueFlowError(ErrorCode.EDGE_TYPE_MISSING, edgeType))
     return false
   }
 
   return slot
-}
-
-const getClass = (edge: GraphEdge) => {
-  const extraClass = edge.class instanceof Function ? edge.class(edge) : edge.class
-  return [noPanClassName, extraClass]
 }
 </script>
 
 <script lang="ts">
 export default {
   name: 'Edges',
+  compatConfig: { MODE: 3 },
 }
 </script>
 
 <template>
-  <template v-for="group of groups" :key="group.level">
-    <svg class="vue-flow__edges vue-flow__container" :style="`z-index: ${group.level}`">
+  <template v-if="dimensions.width && dimensions.height">
+    <svg
+      v-for="group of groups"
+      :key="group.level"
+      class="vue-flow__edges vue-flow__container"
+      :style="`z-index: ${group.level}`"
+    >
       <MarkerDefinitions v-if="group.isMaxLevel" />
       <g>
         <EdgeWrapper
@@ -124,13 +113,12 @@ export default {
           :selectable="selectable(edge.selectable)"
           :updatable="updatable(edge.updatable)"
           :focusable="focusable(edge.focusable)"
-          :class="getClass(edge)"
         />
       </g>
     </svg>
-  </template>
 
-  <svg v-if="connectionLineVisible && !!sourceNode" class="vue-flow__edges vue-flow__connectionline vue-flow__container">
-    <ConnectionLine :source-node="sourceNode" />
-  </svg>
+    <svg v-if="connectionLineVisible && !!sourceNode" class="vue-flow__edges vue-flow__connectionline vue-flow__container">
+      <ConnectionLine :source-node="sourceNode" />
+    </svg>
+  </template>
 </template>

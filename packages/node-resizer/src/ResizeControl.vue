@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { NodeChange, NodeDimensionChange, NodePositionChange } from '@vue-flow/core'
-import { NodeIdInjection, useGetPointerPosition, useVueFlow } from '@vue-flow/core'
+import { NodeIdInjection, clamp, useGetPointerPosition, useVueFlow } from '@vue-flow/core'
 import { select } from 'd3-selection'
 import { drag } from 'd3-drag'
 import type { OnResize, OnResizeStart, ResizeControlProps, ResizeDragEvent } from './types'
@@ -11,6 +11,9 @@ const props = withDefaults(defineProps<ResizeControlProps>(), {
   variant: 'handle' as ResizeControlVariant,
   minWidth: 10,
   minHeight: 10,
+  maxWidth: Number.MAX_VALUE,
+  maxHeight: Number.MAX_VALUE,
+  keepAspectRatio: false,
 })
 
 const emits = defineEmits<{
@@ -25,21 +28,25 @@ const initStartValues = {
   ...initPrevValues,
   pointerX: 0,
   pointerY: 0,
+  aspectRatio: 1,
 }
+
+const { findNode, emits: triggerEmits } = useVueFlow()
+
+const getPointerPosition = useGetPointerPosition()
 
 const contextNodeId = inject(NodeIdInjection, null)
 
 const resizeControlRef = ref<HTMLDivElement>()
 
-const id = computed(() => (typeof props.nodeId === 'string' ? props.nodeId : contextNodeId))
-
-const { findNode, emits: triggerEmits } = useVueFlow()
-
 const startValues = ref<typeof initStartValues>(initStartValues)
+
 const prevValues = ref<typeof initPrevValues>(initPrevValues)
 
-const getPointerPosition = useGetPointerPosition()
+const id = computed(() => (typeof props.nodeId === 'string' ? props.nodeId : contextNodeId))
+
 const defaultPosition = computed(() => (props.variant === ResizeControlVariant.Line ? 'right' : 'bottom-right'))
+
 const controlPosition = computed(() => props.position ?? defaultPosition.value)
 
 watchEffect((onCleanup) => {
@@ -48,6 +55,11 @@ watchEffect((onCleanup) => {
   }
 
   const selection = select(resizeControlRef.value)
+
+  const enableX = controlPosition.value.includes('right') || controlPosition.value.includes('left')
+  const enableY = controlPosition.value.includes('bottom') || controlPosition.value.includes('top')
+  const invertX = controlPosition.value.includes('left')
+  const invertY = controlPosition.value.includes('top')
 
   const dragHandler = drag<HTMLDivElement, unknown>()
     .on('start', (event: ResizeDragEvent) => {
@@ -65,6 +77,7 @@ watchEffect((onCleanup) => {
         ...prevValues.value,
         pointerX: xSnapped,
         pointerY: ySnapped,
+        aspectRatio: prevValues.value.width / prevValues.value.height,
       }
 
       emits('resizeStart', { event, params: prevValues.value })
@@ -72,10 +85,6 @@ watchEffect((onCleanup) => {
     .on('drag', (event: ResizeDragEvent) => {
       const { xSnapped, ySnapped } = getPointerPosition(event)
       const node = findNode(id.value!)
-      const enableX = controlPosition.value.includes('right') || controlPosition.value.includes('left')
-      const enableY = controlPosition.value.includes('bottom') || controlPosition.value.includes('top')
-      const invertX = controlPosition.value.includes('left')
-      const invertY = controlPosition.value.includes('top')
 
       if (node) {
         const changes: NodeChange[] = []
@@ -86,6 +95,7 @@ watchEffect((onCleanup) => {
           height: startHeight,
           x: startNodeX,
           y: startNodeY,
+          aspectRatio: startAspectRatio,
         } = startValues.value
 
         const { x: prevX, y: prevY, width: prevWidth, height: prevHeight } = prevValues.value
@@ -93,8 +103,40 @@ watchEffect((onCleanup) => {
         const distX = Math.floor(enableX ? xSnapped - startX : 0)
         const distY = Math.floor(enableY ? ySnapped - startY : 0)
 
-        const width = Math.max(startWidth + (invertX ? -distX : distX), props.minWidth)
-        const height = Math.max(startHeight + (invertY ? -distY : distY), props.minHeight)
+        let width = clamp(startWidth + (invertX ? -distX : distX), props.minWidth, props.maxWidth)
+        let height = clamp(startHeight + (invertY ? -distY : distY), props.minHeight, props.maxHeight)
+
+        if (props.keepAspectRatio) {
+          const nextAspectRatio = width / height
+          let aspectRatio = startAspectRatio
+
+          if (typeof props.keepAspectRatio === 'number' && nextAspectRatio !== props.keepAspectRatio) {
+            aspectRatio = props.keepAspectRatio
+          }
+
+          const isDiagonal = enableX && enableY
+          const isHorizontal = enableX && !enableY
+          const isVertical = enableY && !enableX
+
+          width = (nextAspectRatio <= aspectRatio && isDiagonal) || isVertical ? height * aspectRatio : width
+          height = (nextAspectRatio > aspectRatio && isDiagonal) || isHorizontal ? width / aspectRatio : height
+
+          if (width >= props.maxWidth) {
+            width = props.maxWidth
+            height = props.maxWidth / aspectRatio
+          } else if (width <= props.minWidth) {
+            width = props.minWidth
+            height = props.minWidth / aspectRatio
+          }
+
+          if (height >= props.maxHeight) {
+            height = props.maxHeight
+            width = props.maxHeight * aspectRatio
+          } else if (height <= props.minHeight) {
+            height = props.minHeight
+            width = props.minHeight * aspectRatio
+          }
+        }
 
         const isWidthChange = width !== prevWidth
         const isHeightChange = height !== prevHeight
@@ -187,6 +229,13 @@ watchEffect((onCleanup) => {
 const positionClassNames = computed(() => controlPosition.value.split('-'))
 const colorStyleProp = computed(() => (props.variant === ResizeControlVariant.Line ? 'borderColor' : 'backgroundColor'))
 const controlStyle = computed(() => (props.color ? { [colorStyleProp.value]: props.color } : {}))
+</script>
+
+<script lang="ts">
+export default {
+  name: 'ResizeControl',
+  compatConfig: { MODE: 3 },
+}
 </script>
 
 <template>

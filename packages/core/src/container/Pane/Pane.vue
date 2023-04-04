@@ -215,6 +215,7 @@ function onMouseEnter(event: MouseEvent) {
 <script lang="ts">
 export default {
   name: 'Pane',
+  compatConfig: { MODE: 3 },
 }
 </script>
 
@@ -226,7 +227,7 @@ export default {
     :class="[{ selection: isSelecting }]"
     @click="onClick"
     @contextmenu="onContextMenu"
-    @wheel="onWheel"
+    @wheel.passive="onWheel"
     @mouseenter="onMouseEnter"
     @mousedown="onMouseDown"
     @mousemove="onMouseMove"

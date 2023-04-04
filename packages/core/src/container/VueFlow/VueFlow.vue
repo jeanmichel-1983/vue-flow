@@ -17,6 +17,7 @@ import type {
   ViewportTransform,
   VueFlowStore,
 } from '../../types'
+import type { VueFlowError } from '../../utils/errors'
 
 const props = withDefaults(defineProps<FlowProps>(), {
   snapToGrid: undefined,
@@ -36,6 +37,7 @@ const props = withDefaults(defineProps<FlowProps>(), {
   fitViewOnInit: undefined,
   connectOnClick: undefined,
   connectionLineStyle: undefined,
+  connectionLineOptions: undefined,
   autoConnect: undefined,
   elevateEdgesOnSelect: undefined,
   elevateNodesOnSelect: undefined,
@@ -44,6 +46,7 @@ const props = withDefaults(defineProps<FlowProps>(), {
   nodesFocusable: undefined,
   autoPanOnConnect: undefined,
   autoPanOnNodeDrag: undefined,
+  isValidConnection: undefined,
 })
 
 const emit = defineEmits<{
@@ -72,6 +75,13 @@ const emit = defineEmits<{
     } & OnConnectStartParams,
   ): void
   (event: 'connectEnd', connectionEvent?: MouseEvent): void
+  (
+    event: 'clickConnectStart',
+    connectionEvent: {
+      event?: MouseEvent
+    } & OnConnectStartParams,
+  ): void
+  (event: 'clickConnectEnd', connectionEvent?: MouseEvent): void
   (event: 'moveStart', moveEvent: { event: D3ZoomEvent<HTMLDivElement, any>; flowTransform: ViewportTransform }): void
   (event: 'move', moveEvent: { event: D3ZoomEvent<HTMLDivElement, any>; flowTransform: ViewportTransform }): void
   (event: 'moveEnd', moveEvent: { event: D3ZoomEvent<HTMLDivElement, any>; flowTransform: ViewportTransform }): void
@@ -101,6 +111,7 @@ const emit = defineEmits<{
   (event: 'edgeUpdate', edgeUpdateEvent: EdgeUpdateEvent): void
   (event: 'edgeUpdateEnd', edgeMouseEvent: EdgeMouseEvent): void
   (event: 'updateNodeInternals'): void
+  (event: 'error', error: VueFlowError): void
 
   /** v-model event definitions */
   (event: 'update:modelValue', value: FlowElements): void
@@ -112,19 +123,21 @@ const modelValue = useVModel(props, 'modelValue', emit)
 const modelNodes = useVModel(props, 'nodes', emit)
 const modelEdges = useVModel(props, 'edges', emit)
 
-const { vueFlowRef, id, hooks, getNodeTypes, getEdgeTypes, $reset, ...rest } = useVueFlow(props)
+const { vueFlowRef, hooks, getNodeTypes, getEdgeTypes, ...rest } = useVueFlow(props)
 
 const dispose = useWatch({ modelValue, nodes: modelNodes, edges: modelEdges }, props, {
   vueFlowRef,
-  id,
   hooks,
   getNodeTypes,
   getEdgeTypes,
-  $reset,
   ...rest,
 })
 
+useHooks(emit, hooks)
+
 const el = ref<HTMLDivElement>()
+
+provide(Slots, useSlots())
 
 onUnmounted(() => {
   dispose()
@@ -134,17 +147,11 @@ onMounted(() => {
   vueFlowRef.value = el.value!
 })
 
-useHooks(emit, hooks)
-
-provide(Slots, useSlots())
-
 defineExpose<VueFlowStore>({
   vueFlowRef,
-  id,
   hooks,
   getNodeTypes,
   getEdgeTypes,
-  $reset,
   ...rest,
 })
 </script>
@@ -152,6 +159,7 @@ defineExpose<VueFlowStore>({
 <script lang="ts">
 export default {
   name: 'VueFlow',
+  compatConfig: { MODE: 3 },
 }
 </script>
 

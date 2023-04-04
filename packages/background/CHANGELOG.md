@@ -1,5 +1,27 @@
 # @vue-flow/background
 
+## 1.1.0
+
+### Minor Changes
+
+- [#782](https://github.com/bcakmakoglu/vue-flow/pull/782) [`59430fe3`](https://github.com/bcakmakoglu/vue-flow/commit/59430fe343f5e229864bef8cc857c4c7cc025491) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Add `lineWidth` prop to background component. Allows changing line bg stroke width
+
+- [#782](https://github.com/bcakmakoglu/vue-flow/pull/782) [`59430fe3`](https://github.com/bcakmakoglu/vue-flow/commit/59430fe343f5e229864bef8cc857c4c7cc025491) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Allow setting gap as number or number array (x,y)
+
+- [#782](https://github.com/bcakmakoglu/vue-flow/pull/782) [`59430fe3`](https://github.com/bcakmakoglu/vue-flow/commit/59430fe343f5e229864bef8cc857c4c7cc025491) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Add `offset` prop to background component. Allows for offsetting individual backgrounds to create a "multi" bg.
+
+## 1.0.5
+
+### Patch Changes
+
+- [#716](https://github.com/bcakmakoglu/vue-flow/pull/716) [`1685827d`](https://github.com/bcakmakoglu/vue-flow/commit/1685827d0ea1dc9864f95a1b3a54fbc43a296e5d) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Fix umd pkg names and use the correct vue flow core umd pkg name in plugins
+
+## 1.0.4
+
+### Patch Changes
+
+- [#682](https://github.com/bcakmakoglu/vue-flow/pull/682) [`b08cb4d4`](https://github.com/bcakmakoglu/vue-flow/commit/b08cb4d45904c229d9ecda5e3cb477cbb7a6acaf) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Add compat mode to components to avoid breaking when used with @vue/compat
+
 ## 1.0.3
 
 ### Patch Changes

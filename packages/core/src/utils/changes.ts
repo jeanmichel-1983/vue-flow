@@ -99,13 +99,10 @@ function handleParentExpand(updateItem: GraphNode, parent: GraphNode) {
   }
 }
 
-export const applyChanges = <
+export function applyChanges<
   T extends FlowElement = FlowElement,
   C extends ElementChange = T extends GraphNode ? NodeChange : EdgeChange,
->(
-  changes: C[],
-  elements: T[],
-): T[] => {
+>(changes: C[], elements: T[]): T[] {
   const addRemoveChanges = changes.filter((c) => c.type === 'add' || c.type === 'remove') as (
     | NodeAddChange
     | EdgeAddChange
@@ -118,12 +115,10 @@ export const applyChanges = <
       const index = elements.findIndex((el) => el.id === change.item.id)
 
       if (index === -1) elements.push(<T>change.item)
-      else warn(`${isNode(change.item) ? `Node` : `Edge`} with id ${change.item.id} already exists`)
     } else if (change.type === 'remove') {
       const index = elements.findIndex((el) => el.id === change.id)
 
       if (index !== -1) elements.splice(index, 1)
-      else warn(`Element with id ${change.id} does not exist`)
     }
   })
 
@@ -190,32 +185,39 @@ export const applyChanges = <
   return elements
 }
 
-export const applyEdgeChanges = (changes: EdgeChange[], edges: GraphEdge[]) => applyChanges(changes, edges)
-export const applyNodeChanges = (changes: NodeChange[], nodes: GraphNode[]) => applyChanges(changes, nodes)
+export function applyEdgeChanges(changes: EdgeChange[], edges: GraphEdge[]) {
+  return applyChanges(changes, edges)
+}
+export function applyNodeChanges(changes: NodeChange[], nodes: GraphNode[]) {
+  return applyChanges(changes, nodes)
+}
 
-export const createSelectionChange = (id: string, selected: boolean): NodeSelectionChange | EdgeSelectionChange => ({
-  id,
-  type: 'select',
-  selected,
-})
+export function createSelectionChange(id: string, selected: boolean): NodeSelectionChange | EdgeSelectionChange {
+  return {
+    id,
+    type: 'select',
+    selected,
+  }
+}
 
-export const createAdditionChange = <
+export function createAdditionChange<
   T extends GraphNode | GraphEdge = GraphNode,
   C extends NodeAddChange | EdgeAddChange = T extends GraphNode ? NodeAddChange : EdgeAddChange,
->(
-  item: T,
-): C =>
-  <C>{
+>(item: T): C {
+  return <C>{
     item,
     type: 'add',
   }
+}
 
-export const createRemoveChange = (id: string): NodeRemoveChange | EdgeRemoveChange => ({
-  id,
-  type: 'remove',
-})
+export function createRemoveChange(id: string): NodeRemoveChange | EdgeRemoveChange {
+  return {
+    id,
+    type: 'remove',
+  }
+}
 
-export const getSelectionChanges = (elements: FlowElements, selectedIds: string[]) => {
+export function getSelectionChanges(elements: FlowElements, selectedIds: string[]) {
   return elements.reduce(
     (res, item) => {
       let willBeSelected = selectedIds.includes(item.id)

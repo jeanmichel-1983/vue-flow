@@ -1,5 +1,273 @@
 # @vue-flow/core
 
+## 1.18.1
+
+### Patch Changes
+
+- [#847](https://github.com/bcakmakoglu/vue-flow/pull/847) [`eee41ece`](https://github.com/bcakmakoglu/vue-flow/commit/eee41ece3ab58bd4572f73701917fed11f64ee19) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Use connectionClickStartHandle for click connect
+
+- [#847](https://github.com/bcakmakoglu/vue-flow/pull/847) [`25145030`](https://github.com/bcakmakoglu/vue-flow/commit/251450300f1637a69c0f04ec3f5d27a6ca59fd4a) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Remove duplicate event bindings from handle
+
+- [#843](https://github.com/bcakmakoglu/vue-flow/pull/843) [`6320e5e7`](https://github.com/bcakmakoglu/vue-flow/commit/6320e5e71ae03950b599db3a8f0136728e00f671) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Add noPanClassName to handles
+
+- [#844](https://github.com/bcakmakoglu/vue-flow/pull/844) [`6978468d`](https://github.com/bcakmakoglu/vue-flow/commit/6978468d2d68918e16e9d8607216242cb6b31ead) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Allow null values to be set for key codes
+
+- [#843](https://github.com/bcakmakoglu/vue-flow/pull/843) [`6320e5e7`](https://github.com/bcakmakoglu/vue-flow/commit/6320e5e71ae03950b599db3a8f0136728e00f671) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Use fallback for connectableStart and connectableEnd
+
+## 1.18.0
+
+### Minor Changes
+
+- [#801](https://github.com/bcakmakoglu/vue-flow/pull/801) [`74c64ff3`](https://github.com/bcakmakoglu/vue-flow/commit/74c64ff34dd3e22111274d8211cd625c9b70e497) Thanks [@github-actions](https://github.com/apps/github-actions)! - Add `clickConnectStart` and `clickConnectEnd` events
+
+- [#801](https://github.com/bcakmakoglu/vue-flow/pull/801) [`fb888b5f`](https://github.com/bcakmakoglu/vue-flow/commit/fb888b5f8bcd9e25a027601ce6295163951ef09e) Thanks [@github-actions](https://github.com/apps/github-actions)! - Add type to edge updater anchor class
+
+- [#801](https://github.com/bcakmakoglu/vue-flow/pull/801) [`3cc8827c`](https://github.com/bcakmakoglu/vue-flow/commit/3cc8827c808271c4abdff14dd8464f0a4f767a58) Thanks [@github-actions](https://github.com/apps/github-actions)! - Add `connectableStart` and `connectableEnd` handle props. Can be used to enable/disable starting or ending a connection on a specific handle.
+
+- [#840](https://github.com/bcakmakoglu/vue-flow/pull/840) [`34b5b7d2`](https://github.com/bcakmakoglu/vue-flow/commit/34b5b7d2fc37cc5a713e8ff94eab0d0aa7303ec5) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Add connection start and end handles to store state
+
+- [#801](https://github.com/bcakmakoglu/vue-flow/pull/801) [`ae41dfac`](https://github.com/bcakmakoglu/vue-flow/commit/ae41dfac10ad790002c5d62b6e730797b18d48ff) Thanks [@github-actions](https://github.com/apps/github-actions)! - Do not remove orphaned edges from state. They will not be rendered but stay in the state, so a user can potentially fix the edge.
+
+## 1.17.6
+
+### Patch Changes
+
+- [#833](https://github.com/bcakmakoglu/vue-flow/pull/833) [`02125c1`](https://github.com/bcakmakoglu/vue-flow/commit/02125c17441c7fe8e07a3b7490d591443eb17c19) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Prevent flickering of graph by hiding transformation pane until next frame
+
+- [#835](https://github.com/bcakmakoglu/vue-flow/pull/835) [`58d75b0`](https://github.com/bcakmakoglu/vue-flow/commit/58d75b09f8fa303706ad03ed7cb60a6f4df5565c) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Reset node and edge state before the rest of the state when calling `$reset` to avoid throwing error
+
+## 1.17.5
+
+### Patch Changes
+
+- [#825](https://github.com/bcakmakoglu/vue-flow/pull/825) [`50f1dff`](https://github.com/bcakmakoglu/vue-flow/commit/50f1dff9e0b76862f5c02efc5b3f2b10513d3194) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Prevent handles with connectable `false` from being considered valid handles
+
+- [#826](https://github.com/bcakmakoglu/vue-flow/pull/826) [`95dd1ae`](https://github.com/bcakmakoglu/vue-flow/commit/95dd1aef34776f3cc92f90306d1087c42805ac67) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Unwrap `nodesConnectable` ref in onClick handler of handles
+
+- [#828](https://github.com/bcakmakoglu/vue-flow/pull/828) [`184c273`](https://github.com/bcakmakoglu/vue-flow/commit/184c27392e07d9f5d9e290a8b1df996f89389103) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Fix edges and connection line paths not matching up
+
+## 1.17.4
+
+### Patch Changes
+
+- [`ffc2d17`](https://github.com/bcakmakoglu/vue-flow/commit/ffc2d17ab3201d69524f8e95797b57813256bdd7) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Fix incorrect type export paths
+
+## 1.17.3
+
+### Patch Changes
+
+- [#815](https://github.com/bcakmakoglu/vue-flow/pull/815) [`15cc769`](https://github.com/bcakmakoglu/vue-flow/commit/15cc7692c84a7cbd1af4c7850cc742662c292cf0) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Fix object assign order when parsing node and edge obj
+
+## 1.17.2
+
+### Patch Changes
+
+- [#810](https://github.com/bcakmakoglu/vue-flow/pull/810) [`3c06fdfb`](https://github.com/bcakmakoglu/vue-flow/commit/3c06fdfbf92b491e1be87077250949b82f1fd534) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Make wheel and touchstart event listeners passive to avoid warnings
+
+## 1.17.1
+
+### Patch Changes
+
+- [#799](https://github.com/bcakmakoglu/vue-flow/pull/799) [`b1e92195`](https://github.com/bcakmakoglu/vue-flow/commit/b1e92195e5679ecb74cd0edea43bfa5359727a5c) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Add missing emit definition for `error`
+
+- [#796](https://github.com/bcakmakoglu/vue-flow/pull/796) [`54ea8a0d`](https://github.com/bcakmakoglu/vue-flow/commit/54ea8a0d0c6c95931cb2aeb0079751db6447df65) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Fix return type of `getIncomers` & `getOutgoers`
+
+- [#793](https://github.com/bcakmakoglu/vue-flow/pull/793) [`c67e9391`](https://github.com/bcakmakoglu/vue-flow/commit/c67e939112fbc4003ab4164f8b7ea52aa44a718f) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Check if node handle bounds exist in `getNodesInitialized`
+
+- [#793](https://github.com/bcakmakoglu/vue-flow/pull/793) [`ef1c48ce`](https://github.com/bcakmakoglu/vue-flow/commit/ef1c48ce0a99f71efba197a2de613179a6891211) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Use visible nodes to check if `onNodesInitialized` should be triggered
+
+## 1.17.0
+
+### Minor Changes
+
+- [#785](https://github.com/bcakmakoglu/vue-flow/pull/785) [`7667aa60`](https://github.com/bcakmakoglu/vue-flow/commit/7667aa60b819cc7c545d5374e49cdc27d5004d5b) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Allow passing objects with only `id` to `getConnectedEdges` nodes arg
+
+- [#781](https://github.com/bcakmakoglu/vue-flow/pull/781) [`ad8c7897`](https://github.com/bcakmakoglu/vue-flow/commit/ad8c78977cd0e436e6f9602ecf5ea0805bf8ac13) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Add `onError` hook which allows handling vue flow errors by users. Will default to console.warn if no handler is passed
+
+### Patch Changes
+
+- [#783](https://github.com/bcakmakoglu/vue-flow/pull/783) [`b864c436`](https://github.com/bcakmakoglu/vue-flow/commit/b864c43677779782e98f5cb809a047f2dc5b0aff) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Remove `stop` from `EdgeRenderer` as watcher has been removed and stop refers to `window.stop` which causes requests to be cancelled when VueFlow is unmounted
+
+## 1.16.5
+
+### Patch Changes
+
+- [#780](https://github.com/bcakmakoglu/vue-flow/pull/780) [`cdaf1e99`](https://github.com/bcakmakoglu/vue-flow/commit/cdaf1e993ad3328f2659a4781214914ee78683bf) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Use `Object.assign` when parsing node to avoid mutating the original object.
+
+- [#770](https://github.com/bcakmakoglu/vue-flow/pull/770) [`f88faac7`](https://github.com/bcakmakoglu/vue-flow/commit/f88faac7d2849c596121519b5b417270f9cdfc3d) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Fix non-passive wheel event listener violation
+
+## 1.16.4
+
+### Patch Changes
+
+- [#765](https://github.com/bcakmakoglu/vue-flow/pull/765) [`12c84a80`](https://github.com/bcakmakoglu/vue-flow/commit/12c84a80365b48db758ccdd675a12744b18dbe1b) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Unwrap refs in node wrapper
+
+- [#765](https://github.com/bcakmakoglu/vue-flow/pull/765) [`12c84a80`](https://github.com/bcakmakoglu/vue-flow/commit/12c84a80365b48db758ccdd675a12744b18dbe1b) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Rename `parentNode` prop for custom nodes to `parent` to avoid TypeError which occurs as `div` already has `parentNode` defined which cannot be overwritten
+
+## 1.16.3
+
+### Patch Changes
+
+- [#756](https://github.com/bcakmakoglu/vue-flow/pull/756) [`47b03e75`](https://github.com/bcakmakoglu/vue-flow/commit/47b03e757152b7801c28d8eb3373a084bd2a16d8) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Add missing source and target position values on `GraphEdge` type objects if available
+
+- [#759](https://github.com/bcakmakoglu/vue-flow/pull/759) [`35b0a0ac`](https://github.com/bcakmakoglu/vue-flow/commit/35b0a0acef11a1b63690c7490be28fe2ff62643b) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Use render fn for node wrapper. Fixes props being hyphanated instead of camelcase when passed to custom components.
+
+## 1.16.2
+
+### Patch Changes
+
+- [#751](https://github.com/bcakmakoglu/vue-flow/pull/751) [`060202db`](https://github.com/bcakmakoglu/vue-flow/commit/060202db427cfbed47bff82ee1aeb0d2aa054ecb) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Use computed properties for edge class and style props
+
+- [#750](https://github.com/bcakmakoglu/vue-flow/pull/750) [`e799cf6e`](https://github.com/bcakmakoglu/vue-flow/commit/e799cf6e3e660375ce8a1a7340873ab770b3e40e) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Correct check if valid connection func was passed
+
+## 1.16.1
+
+### Patch Changes
+
+- [#746](https://github.com/bcakmakoglu/vue-flow/pull/746) [`73a2b168`](https://github.com/bcakmakoglu/vue-flow/commit/73a2b16893b263d2fd64852b4e4acb0637a603ec) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Downgrade unplugin-auto-import to fix vue types issue
+
+## 1.16.0
+
+### Minor Changes
+
+- [#745](https://github.com/bcakmakoglu/vue-flow/pull/745) [`01e91b68`](https://github.com/bcakmakoglu/vue-flow/commit/01e91b68f88467f5b1c190a12e69bd7f952849d2) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Add handle validation result into store state
+
+- [#744](https://github.com/bcakmakoglu/vue-flow/pull/744) [`1bc50add`](https://github.com/bcakmakoglu/vue-flow/commit/1bc50add8ba8ea2298319341f6d3bd73e9ca39ab) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Pass targetNode and targetHandle as props to custom connection lines
+
+- [#740](https://github.com/bcakmakoglu/vue-flow/pull/740) [`a3ded51f`](https://github.com/bcakmakoglu/vue-flow/commit/a3ded51fa452e537c245768655368f089534091e) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Export `clamp` utility
+
+- [#745](https://github.com/bcakmakoglu/vue-flow/pull/745) [`01e91b68`](https://github.com/bcakmakoglu/vue-flow/commit/01e91b68f88467f5b1c190a12e69bd7f952849d2) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Add `isValidConnection` prop to allow for validating edge updates or use a global validator for all handles
+
+### Patch Changes
+
+- [#740](https://github.com/bcakmakoglu/vue-flow/pull/740) [`a3ded51f`](https://github.com/bcakmakoglu/vue-flow/commit/a3ded51fa452e537c245768655368f089534091e) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Force update node dimensions when ResizeObserver callback is triggered
+
+## 1.15.5
+
+### Patch Changes
+
+- [#734](https://github.com/bcakmakoglu/vue-flow/pull/734) [`123ad512`](https://github.com/bcakmakoglu/vue-flow/commit/123ad5126a480e11735ff58d8f039385243a127f) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Check if handle is connectable before trying to validate
+
+- [#737](https://github.com/bcakmakoglu/vue-flow/pull/737) [`f2b3cd87`](https://github.com/bcakmakoglu/vue-flow/commit/f2b3cd874a4c3e3494e093afd2a5ca34c756864a) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Blur node element after unselecting
+
+## 1.15.4
+
+### Patch Changes
+
+- [#728](https://github.com/bcakmakoglu/vue-flow/pull/728) [`6b149ca6`](https://github.com/bcakmakoglu/vue-flow/commit/6b149ca69a634c2cc51138e01098dbdc0bdf6620) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Compare internal node dimensions against calculated ones when trying to update node dimensions
+
+## 1.15.3
+
+### Patch Changes
+
+- [#720](https://github.com/bcakmakoglu/vue-flow/pull/720) [`bac0d735`](https://github.com/bcakmakoglu/vue-flow/commit/bac0d735b1df65945f12b866eb94eab4f7c70b01) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Remove duplicate connectStart and connectEnd emits
+
+- [#719](https://github.com/bcakmakoglu/vue-flow/pull/719) [`18b934eb`](https://github.com/bcakmakoglu/vue-flow/commit/18b934eb9e4163c9188e6d81d618f67716c8ef5e) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - prevent selecting nodes when node selectable is false
+
+- [#719](https://github.com/bcakmakoglu/vue-flow/pull/719) [`a4b0b6b7`](https://github.com/bcakmakoglu/vue-flow/commit/a4b0b6b799636deca171eb4d438901fe4af330a9) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Make shouldReplaceId arg in updateEdge optional
+
+- [#719](https://github.com/bcakmakoglu/vue-flow/pull/719) [`7a2f1c3b`](https://github.com/bcakmakoglu/vue-flow/commit/7a2f1c3b21dc9acb3d311176be63f0990894ce52) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Add noPanClassName when node is draggable
+
+- [#719](https://github.com/bcakmakoglu/vue-flow/pull/719) [`16bd9152`](https://github.com/bcakmakoglu/vue-flow/commit/16bd915214335af8ed3c82409836756e7dde6e35) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Wait until all nodes are initialized before triggering viewport actions
+
+## 1.15.2
+
+### Patch Changes
+
+- [#716](https://github.com/bcakmakoglu/vue-flow/pull/716) [`1685827d`](https://github.com/bcakmakoglu/vue-flow/commit/1685827d0ea1dc9864f95a1b3a54fbc43a296e5d) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Fix umd pkg names and use the correct vue flow core umd pkg name in plugins
+
+- [#713](https://github.com/bcakmakoglu/vue-flow/pull/713) [`95b51a0e`](https://github.com/bcakmakoglu/vue-flow/commit/95b51a0e352e29305a12387ea03fa35ce7f16825) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Prevent undefined being passed to updateNodeInternals
+
+- [#712](https://github.com/bcakmakoglu/vue-flow/pull/712) [`76256439`](https://github.com/bcakmakoglu/vue-flow/commit/76256439bb59f2afb20a423b283d7232afece97f) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Fix resize-observer throwing when node el doesn't exist but effect is run
+
+- [#707](https://github.com/bcakmakoglu/vue-flow/pull/707) [`e8c383ff`](https://github.com/bcakmakoglu/vue-flow/commit/e8c383ffeffb306ca18d2acfaf145efba3e11fa1) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Fix nodes not using zIndex option
+
+- [#716](https://github.com/bcakmakoglu/vue-flow/pull/716) [`1685827d`](https://github.com/bcakmakoglu/vue-flow/commit/1685827d0ea1dc9864f95a1b3a54fbc43a296e5d) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Prevent writing `process.env` into umd build
+
+- [#714](https://github.com/bcakmakoglu/vue-flow/pull/714) [`1fa4ee1b`](https://github.com/bcakmakoglu/vue-flow/commit/1fa4ee1b8faf25ce83c6c8f37fa35531c54eba0c) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Wait until viewport helper is initialized before triggering viewport functions and pane ready event
+
+## 1.15.1
+
+### Patch Changes
+
+- [#704](https://github.com/bcakmakoglu/vue-flow/pull/704) [`b3462f2`](https://github.com/bcakmakoglu/vue-flow/commit/b3462f22cb4bdeabb39f266ccc8879fa1b3ceae9) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Remove export of `SelectionPane` as the component doesn't exist anymore
+
+- [#703](https://github.com/bcakmakoglu/vue-flow/pull/703) [`0838d2c`](https://github.com/bcakmakoglu/vue-flow/commit/0838d2c46bdcf24b9f88a9ed2ce10f939b31fbfe) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Downgrade auto imports. Fixes broken type imports.
+
+## 1.15.0
+
+### Minor Changes
+
+- [#684](https://github.com/bcakmakoglu/vue-flow/pull/684) [`a788cc0`](https://github.com/bcakmakoglu/vue-flow/commit/a788cc09421a9b39aff1ff44052be6feae00b7e9) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Add option to enable/disable replacing edge id when `updateEdge` action is used
+
+- [#699](https://github.com/bcakmakoglu/vue-flow/pull/699) [`c1a7995`](https://github.com/bcakmakoglu/vue-flow/commit/c1a799592ee7fc116ee74fc6a083496ee5350629) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Omit internal properties when using `toObject`
+
+### Patch Changes
+
+- [#667](https://github.com/bcakmakoglu/vue-flow/pull/667) [`231271a`](https://github.com/bcakmakoglu/vue-flow/commit/231271a7dadaaee056e79e16f30d2f0755e51d53) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Prevent layout shift on initial render by hiding viewport until initial nodes have width/height
+
+- [#667](https://github.com/bcakmakoglu/vue-flow/pull/667) [`89198bd`](https://github.com/bcakmakoglu/vue-flow/commit/89198bdc29ed9dde6961190ac99eb30aebfbf474) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Remove Promises from viewport helper functions, will not await viewport anymore but instead return no-op functions if called too early
+
+- [#695](https://github.com/bcakmakoglu/vue-flow/pull/695) [`616e795`](https://github.com/bcakmakoglu/vue-flow/commit/616e7951e51c112f29107621588a29b60a7d6e85) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Use snapGrid values to clamp initial node positions
+
+## 1.14.3
+
+### Patch Changes
+
+- [#671](https://github.com/bcakmakoglu/vue-flow/pull/671) [`c47bc5ce`](https://github.com/bcakmakoglu/vue-flow/commit/c47bc5ceb2ea9c739be5eef3291c1312fdbce824) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Fit view on init is now triggered as soon as node dimensions are updated for the first time
+
+- [#682](https://github.com/bcakmakoglu/vue-flow/pull/682) [`b08cb4d4`](https://github.com/bcakmakoglu/vue-flow/commit/b08cb4d45904c229d9ecda5e3cb477cbb7a6acaf) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Add compat mode to components to avoid breaking when used with @vue/compat
+
+- [`03edd46c`](https://github.com/bcakmakoglu/vue-flow/commit/03edd46cef18b246cca061e554b469a1cfbefa16) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Allow depr. connectionLineType to be null
+
+- [`03edd46c`](https://github.com/bcakmakoglu/vue-flow/commit/03edd46cef18b246cca061e554b469a1cfbefa16) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Add missing straight type to connection line options
+
+- [#680](https://github.com/bcakmakoglu/vue-flow/pull/680) [`70ae3410`](https://github.com/bcakmakoglu/vue-flow/commit/70ae341062072acab234ce9ee88b33d2866ef7b3) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Fix connections for handles that are bigger than the specified connection radius
+
+- [#680](https://github.com/bcakmakoglu/vue-flow/pull/680) [`70ae3410`](https://github.com/bcakmakoglu/vue-flow/commit/70ae341062072acab234ce9ee88b33d2866ef7b3) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Always emit edge update event
+
+- [`03edd46c`](https://github.com/bcakmakoglu/vue-flow/commit/03edd46cef18b246cca061e554b469a1cfbefa16) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Fix connection line not rendering properly when destructuring slot props
+
+- [#681](https://github.com/bcakmakoglu/vue-flow/pull/681) [`d73995aa`](https://github.com/bcakmakoglu/vue-flow/commit/d73995aae1b14ea5cad4ee3764cff558344bcb34) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Set `user-select: none` for edge labels
+
+- [#668](https://github.com/bcakmakoglu/vue-flow/pull/668) [`d39c63e5`](https://github.com/bcakmakoglu/vue-flow/commit/d39c63e5f3ec54fb1de10d84a7271546d1b7e3e8) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Avoid re-rendering edges that have been deleted
+
+## 1.14.2
+
+### Patch Changes
+
+- [#663](https://github.com/bcakmakoglu/vue-flow/pull/663) [`05a3e26e`](https://github.com/bcakmakoglu/vue-flow/commit/05a3e26e58ba19864ceb3858412f67d6af3099b7) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Avoid triggering edge update when mouse button is not left
+
+- [#658](https://github.com/bcakmakoglu/vue-flow/pull/658) [`b8ad4458`](https://github.com/bcakmakoglu/vue-flow/commit/b8ad4458c3efddabf8bdc8bb229bed16f5aaf63c) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - When `includeHiddenNodes` is false, exclude hidden nodes when using fitView
+
+- [#660](https://github.com/bcakmakoglu/vue-flow/pull/660) [`0dbabfc5`](https://github.com/bcakmakoglu/vue-flow/commit/0dbabfc58b63c2776f56e916f40abcb7d3dc2ecb) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Use default values when defaultViewport vals are missing
+
+## 1.14.1
+
+### Patch Changes
+
+- [#655](https://github.com/bcakmakoglu/vue-flow/pull/655) [`3d958dfe`](https://github.com/bcakmakoglu/vue-flow/commit/3d958dfe4f36702dd89ee456369c6090e22163e3) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Check if prev closest handle exists in pointer up handler
+
+- [#656](https://github.com/bcakmakoglu/vue-flow/pull/656) [`b3796a66`](https://github.com/bcakmakoglu/vue-flow/commit/b3796a66ea66386484e7b56726c9f40f69a4556f) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Store connectionStatus when using connection actions
+
+## 1.14.0
+
+### Minor Changes
+
+- [#654](https://github.com/bcakmakoglu/vue-flow/pull/654) [`99909f16`](https://github.com/bcakmakoglu/vue-flow/commit/99909f1660c337469abf7d6558be9de1b134074d) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Add `VueFlowError` class which is used when throwing
+
+- [#649](https://github.com/bcakmakoglu/vue-flow/pull/649) [`47bc8280`](https://github.com/bcakmakoglu/vue-flow/commit/47bc8280075935e3047ebd26714b5516e0bb522f) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Add `connectionStatus` to connection lines, which can be used to check if the connection line is used on a valid handle.
+
+### Patch Changes
+
+- [#650](https://github.com/bcakmakoglu/vue-flow/pull/650) [`aaf46dc2`](https://github.com/bcakmakoglu/vue-flow/commit/aaf46dc22ca8daa507e8e7eb7c3646bde158d8bc) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Add `valid` and `connecting` class names instead of `vue-flow__handle-valid` and `vue-flow__handle-connecting` (old class names kept for backwards compatibility but will be removed in the future)
+
+- [#653](https://github.com/bcakmakoglu/vue-flow/pull/653) [`64e9dc3c`](https://github.com/bcakmakoglu/vue-flow/commit/64e9dc3c1eb00da2775f8d6e2d05d5fdbd6b4cdc) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Draw connection lines to opposite position
+
+- [#651](https://github.com/bcakmakoglu/vue-flow/pull/651) [`c0d172be`](https://github.com/bcakmakoglu/vue-flow/commit/c0d172bee56b95f3e5f2fc72f16836d0e3e16a91) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - When a node is not draggable, avoid dragging it when using a selection box
+
+- [#650](https://github.com/bcakmakoglu/vue-flow/pull/650) [`aaf46dc2`](https://github.com/bcakmakoglu/vue-flow/commit/aaf46dc22ca8daa507e8e7eb7c3646bde158d8bc) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Fix ios connection error
+
 ## 1.13.2
 
 ### Patch Changes
@@ -31,11 +299,15 @@
   useVueFlow({
     autoPanOnNodeDrag: true,
     autoPanOnConnect: true,
-  })
+  });
   ```
 
   ```vue
-  <VueFlow v-model="elements" :autoPanOnNodeDrag="true" :autoPanOnConnect="true" />
+  <VueFlow
+    v-model="elements"
+    :autoPanOnNodeDrag="true"
+    :autoPanOnConnect="true"
+  />
   ```
 
 - [#636](https://github.com/bcakmakoglu/vue-flow/pull/636) [`e1628ec6`](https://github.com/bcakmakoglu/vue-flow/commit/e1628ec6601e50a7bc212a2ece83877dee0e9e70) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Export `isGraphNode` and `isGraphEdge` typeguards
@@ -169,24 +441,28 @@
   ```js
   const nodes = ref([
     {
-      id: '4',
-      label: 'Node 4',
+      id: "4",
+      label: "Node 4",
       position: { x: 320, y: 200 },
-      style: { backgroundColor: 'rgba(255, 0, 0, 0.7)', width: '300px', height: '300px' },
+      style: {
+        backgroundColor: "rgba(255, 0, 0, 0.7)",
+        width: "300px",
+        height: "300px",
+      },
     },
     {
-      id: '4a',
-      label: 'Node 4a',
+      id: "4a",
+      label: "Node 4a",
       position: { x: 15, y: 65 },
-      class: 'light',
+      class: "light",
       extent: {
-        range: 'parent',
+        range: "parent",
         // apply 10 px padding to all four sides
         padding: [10],
       },
-      parentNode: '4',
+      parentNode: "4",
     },
-  ])
+  ]);
   ```
 
 ### Patch Changes
@@ -253,40 +529,61 @@
 
   ```vue
   <script>
-  import { VueFlow } from '@vue-flow/core'
+  import { VueFlow } from "@vue-flow/core";
 
   export default defineComponent({
-    name: 'OptionsAPIExample',
+    name: "OptionsAPIExample",
     components: { VueFlow },
     data() {
       return {
         vueFlow: null,
         instance: null,
         elements: [
-          { id: '1', type: 'input', label: 'Node 1', position: { x: 250, y: 5 }, class: 'light' },
-          { id: '2', label: 'Node 2', position: { x: 100, y: 100 }, class: 'light' },
-          { id: '3', label: 'Node 3', position: { x: 400, y: 100 }, class: 'light' },
-          { id: '4', label: 'Node 4', position: { x: 400, y: 200 }, class: 'light' },
-          { id: 'e1-2', source: '1', target: '2', animated: true },
-          { id: 'e1-3', source: '1', target: '3' },
+          {
+            id: "1",
+            type: "input",
+            label: "Node 1",
+            position: { x: 250, y: 5 },
+            class: "light",
+          },
+          {
+            id: "2",
+            label: "Node 2",
+            position: { x: 100, y: 100 },
+            class: "light",
+          },
+          {
+            id: "3",
+            label: "Node 3",
+            position: { x: 400, y: 100 },
+            class: "light",
+          },
+          {
+            id: "4",
+            label: "Node 4",
+            position: { x: 400, y: 200 },
+            class: "light",
+          },
+          { id: "e1-2", source: "1", target: "2", animated: true },
+          { id: "e1-3", source: "1", target: "3" },
         ],
-      }
+      };
     },
     methods: {
       // You can listen to `onPaneReady` to get the instance
       onPaneReady(instance) {
-        instance.fitView()
-        this.instance = instance
+        instance.fitView();
+        this.instance = instance;
       },
       onConnect(params) {
         // either use the instance you have saved in `onPaneReady`
-        this.instance?.addEdges([params])
+        this.instance?.addEdges([params]);
 
         // or use the template-ref
-        this.$refs.vueFlow?.addEdges([params])
+        this.$refs.vueFlow?.addEdges([params]);
       },
     },
-  })
+  });
   </script>
 
   <template>
@@ -626,16 +923,16 @@ Additionally, nodes can be moved using keyboard controls (Arrow-Keys).
   - You can either use the action `getIntersectingNodes` to find all nodes that intersect with a given node
 
   ```js
-  const { onNodeDrag, getIntersectingNodes, getNodes } = useVueFlow()
+  const { onNodeDrag, getIntersectingNodes, getNodes } = useVueFlow();
 
   onNodeDrag(({ node }) => {
-    const intersections = getIntersectingNodes(node).map((n) => n.id)
+    const intersections = getIntersectingNodes(node).map((n) => n.id);
 
     getNodes.value.forEach((n) => {
       // highlight nodes that are intersecting with the dragged node
-      n.class = intersections.includes(n.id) ? 'highlight' : ''
-    })
-  })
+      n.class = intersections.includes(n.id) ? "highlight" : "";
+    });
+  });
   ```
 
   - Node drag events will provide you with the intersecting nodes without having to call the action explicitly.
@@ -643,20 +940,27 @@ Additionally, nodes can be moved using keyboard controls (Arrow-Keys).
   ```js
   onNodeDrag(({ intersections }) => {
     getNodes.value.forEach((n) => {
-      n.class = intersections?.some((i) => i.id === n.id) ? 'highlight' : ''
-    })
-  })
+      n.class = intersections?.some((i) => i.id === n.id) ? "highlight" : "";
+    });
+  });
   ```
 
   - Or you can use the `isIntersecting` util to check if a node intersects with a given area
 
   ```js
-  const { onNodeDrag, isNodeIntersecting } = useVueFlow()
+  const { onNodeDrag, isNodeIntersecting } = useVueFlow();
 
   onNodeDrag(({ node }) => {
     // highlight the node if it is intersecting with the given area
-    node.class = isNodeIntersecting(node, { x: 0, y: 0, width: 100, height: 100 }) ? 'highlight' : ''
-  })
+    node.class = isNodeIntersecting(node, {
+      x: 0,
+      y: 0,
+      width: 100,
+      height: 100,
+    })
+      ? "highlight"
+      : "";
+  });
   ```
 
 - [#396](https://github.com/bcakmakoglu/vue-flow/pull/396) [`03412ac`](https://github.com/bcakmakoglu/vue-flow/commit/03412acf0d4452c104cc342e5e11eb3a7671fe72) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - Add zoomable and pannable to MiniMap
@@ -685,38 +989,44 @@ Additionally, nodes can be moved using keyboard controls (Arrow-Keys).
 
   ```vue
   <script lang="ts" setup>
-  import type { EdgeProps, Position } from '@vue-flow/core'
-  import { EdgeLabelRenderer, getBezierPath, useVueFlow } from '@vue-flow/core'
-  import type { CSSProperties } from 'vue'
+  import type { EdgeProps, Position } from "@vue-flow/core";
+  import { EdgeLabelRenderer, getBezierPath, useVueFlow } from "@vue-flow/core";
+  import type { CSSProperties } from "vue";
 
   interface CustomEdgeProps<T = any> extends EdgeProps<T> {
-    id: string
-    sourceX: number
-    sourceY: number
-    targetX: number
-    targetY: number
-    sourcePosition: Position
-    targetPosition: Position
-    data: T
-    markerEnd: string
-    style: CSSProperties
+    id: string;
+    sourceX: number;
+    sourceY: number;
+    targetX: number;
+    targetY: number;
+    sourcePosition: Position;
+    targetPosition: Position;
+    data: T;
+    markerEnd: string;
+    style: CSSProperties;
   }
 
-  const props = defineProps<CustomEdgeProps>()
+  const props = defineProps<CustomEdgeProps>();
 
-  const { removeEdges } = useVueFlow()
+  const { removeEdges } = useVueFlow();
 
-  const path = $computed(() => getBezierPath(props))
+  const path = $computed(() => getBezierPath(props));
   </script>
 
   <script lang="ts">
   export default {
     inheritAttrs: false,
-  }
+  };
   </script>
 
   <template>
-    <path :id="id" :style="style" class="vue-flow__edge-path" :d="path[0]" :marker-end="markerEnd" />
+    <path
+      :id="id"
+      :style="style"
+      class="vue-flow__edge-path"
+      :d="path[0]"
+      :marker-end="markerEnd"
+    />
 
     <EdgeLabelRenderer>
       <div
@@ -835,12 +1145,12 @@ Additionally, nodes can be moved using keyboard controls (Arrow-Keys).
 
   ```vue
   <script lang="ts" setup>
-  import { Handle, HandleConnectable } from '@vue-flow/core'
+  import { Handle, HandleConnectable } from "@vue-flow/core";
 
   const handleConnectable: HandleConnectable = (node, connectedEdges) => {
-    console.log(node, connectedEdges)
-    return true
-  }
+    console.log(node, connectedEdges);
+    return true;
+  };
   </script>
   <template>
     <!-- single connection -->
@@ -858,28 +1168,28 @@ Additionally, nodes can be moved using keyboard controls (Arrow-Keys).
   ```js
   const nodes = ref([
     {
-      id: '1',
+      id: "1",
       position: { x: 0, y: 0 },
-      connectable: 'single', // each handle is only connectable once (default node for example)
+      connectable: "single", // each handle is only connectable once (default node for example)
     },
     {
-      id: '2',
+      id: "2",
       position: { x: 200, y: 0 },
       connectable: (node, connectedEdges) => {
-        return true // will allow any number of connections
+        return true; // will allow any number of connections
       },
     },
     {
-      id: '3',
+      id: "3",
       position: { x: 400, y: 0 },
       connectable: true, // will allow any number of connections
     },
     {
-      id: '4',
+      id: "4",
       position: { x: 200, y: 0 },
       connectable: false, // will disable handles
     },
-  ])
+  ]);
   ```
 
 ### Patch Changes
@@ -891,7 +1201,7 @@ Additionally, nodes can be moved using keyboard controls (Arrow-Keys).
   ```vue
   <script setup>
   // `vueflow` pkg exports all features, i.e. core + additional components
-  import { VueFlow, Background, MiniMap, Controls } from 'vueflow'
+  import { VueFlow, Background, MiniMap, Controls } from "vueflow";
   </script>
 
   <template>
@@ -918,21 +1228,28 @@ Additionally, nodes can be moved using keyboard controls (Arrow-Keys).
 
   ```vue
   <script lang="ts" setup>
-  import { useHandle, NodeId } from '@vue-flow/core'
+  import { useHandle, NodeId } from "@vue-flow/core";
 
-  const nodeId = inject(NodeId)
+  const nodeId = inject(NodeId);
 
-  const handleId = 'my-handle'
+  const handleId = "my-handle";
 
-  const type = 'source'
+  const type = "source";
 
-  const isValidConnection = () => true
+  const isValidConnection = () => true;
 
-  const { onMouseDown } = useHandle()
+  const { onMouseDown } = useHandle();
 
   const onMouseDownHandler = (event: MouseEvent) => {
-    onMouseDown(event, handleId, nodeId, type === 'target', isValidConnection, undefined)
-  }
+    onMouseDown(
+      event,
+      handleId,
+      nodeId,
+      type === "target",
+      isValidConnection,
+      undefined
+    );
+  };
   </script>
 
   <template>
@@ -944,22 +1261,22 @@ Additionally, nodes can be moved using keyboard controls (Arrow-Keys).
 
   ```vue
   <script lang="ts" setup>
-  import { useHandle, useNode } from '@vue-flow/core'
+  import { useHandle, useNode } from "@vue-flow/core";
 
-  const { nodeId } = useNode()
+  const { nodeId } = useNode();
 
-  const handleId = 'my-handle'
+  const handleId = "my-handle";
 
-  const type = 'source'
+  const type = "source";
 
-  const isValidConnection = () => true
+  const isValidConnection = () => true;
 
   const { onMouseDown } = useHandle({
     nodeId,
     handleId,
     isValidConnection,
     type,
-  })
+  });
   </script>
 
   <template>
@@ -988,22 +1305,22 @@ Additionally, nodes can be moved using keyboard controls (Arrow-Keys).
   Before:
 
   ```js
-  import { getBezierPath, getEdgeCenter } from '@braks/vue-flow'
+  import { getBezierPath, getEdgeCenter } from "@braks/vue-flow";
 
   // used to return the path string only
-  const edgePath = computed(() => getBezierPath(pathParams))
+  const edgePath = computed(() => getBezierPath(pathParams));
 
   // was necessary to get the centerX, centerY of an edge
-  const centered = computed(() => getEdgeCenter(centerParams))
+  const centered = computed(() => getEdgeCenter(centerParams));
   ```
 
   After:
 
   ```js
-  import { getBezierPath } from '@vue-flow/core'
+  import { getBezierPath } from "@vue-flow/core";
 
   // returns the path string and the center positions
-  const [path, centerX, centerY] = computed(() => getBezierPath(pathParams))
+  const [path, centerX, centerY] = computed(() => getBezierPath(pathParams));
   ```
 
 - [#305](https://github.com/bcakmakoglu/vue-flow/pull/305) [`47d837aa`](https://github.com/bcakmakoglu/vue-flow/commit/47d837aac096e59e7f55213990dff2cc7eba0c01) Thanks [@bcakmakoglu](https://github.com/bcakmakoglu)! - # What's changed?
@@ -1038,12 +1355,16 @@ Additionally, nodes can be moved using keyboard controls (Arrow-Keys).
   Before:
 
   ```js
-  import { VueFlow, Background, MiniMap, Controls } from '@braks/vue-flow'
+  import { VueFlow, Background, MiniMap, Controls } from "@braks/vue-flow";
   ```
 
   After
 
   ```js
-  import { VueFlow } from '@vue-flow/core'
-  import { Background, MiniMap, Controls } from '@vue-flow/additional-components'
+  import { VueFlow } from "@vue-flow/core";
+  import {
+    Background,
+    MiniMap,
+    Controls,
+  } from "@vue-flow/additional-components";
   ```

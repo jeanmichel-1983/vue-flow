@@ -1,5 +1,5 @@
 import EdgeAnchor from './EdgeAnchor'
-import type { Connection, EdgeComponent, EdgeUpdatable, GraphEdge, HandleType } from '~/types'
+import type { Connection, EdgeComponent, EdgeUpdatable, GraphEdge, HandleType, MouseTouchEvent } from '~/types'
 import { ConnectionMode, Position } from '~/types'
 
 interface Props {
@@ -14,6 +14,7 @@ interface Props {
 
 const EdgeWrapper = defineComponent({
   name: 'Edge',
+  compatConfig: { MODE: 3 },
   props: ['name', 'type', 'id', 'updatable', 'selectable', 'focusable', 'edge'],
   setup(props: Props) {
     const {
@@ -23,11 +24,12 @@ const EdgeWrapper = defineComponent({
       edgeUpdaterRadius,
       emits,
       nodesSelectionActive,
-      getEdges,
+      noPanClassName,
       getEdgeTypes,
       removeSelectedEdges,
       findEdge,
       findNode,
+      isValidConnection,
     } = useVueFlow()
 
     const hooks = useEdgeHooks(props.edge, emits)
@@ -46,8 +48,6 @@ const EdgeWrapper = defineComponent({
 
     const edgeUpdaterType = ref<HandleType>('source')
 
-    const mouseEvent = ref<MouseEvent>()
-
     const edgeEl = ref<SVGElement>()
 
     provide(EdgeId, props.id)
@@ -57,87 +57,21 @@ const EdgeWrapper = defineComponent({
 
     const targetNode = $computed(() => findNode(edge.target))
 
-    const onEdgeUpdaterMouseEnter = () => (mouseOver = true)
-
-    const onEdgeUpdaterMouseOut = () => (mouseOver = false)
-
-    const onEdgeUpdate = (connection: Connection) => {
-      if (!connectionExists(connection, getEdges.value)) hooks.emit.update({ edge, connection })
-    }
-
-    const onEdgeUpdateEnd = () => {
-      if (!mouseEvent.value) return
-      hooks.emit.updateEnd({ event: mouseEvent.value, edge })
-      updating = false
-    }
+    const edgeClass = $computed(() => (edge.class instanceof Function ? edge.class(edge) : edge.class))
+    const edgeStyle = $computed(() => (edge.style instanceof Function ? edge.style(edge) : edge.style))
 
     const { handlePointerDown } = useHandle({
       nodeId,
       handleId,
       type,
-      isValidConnection: undefined,
+      isValidConnection: isValidConnection.value,
       edgeUpdaterType,
       onEdgeUpdate,
       onEdgeUpdateEnd,
     })
 
-    const handleEdgeUpdater = (event: MouseEvent, isSourceHandle: boolean) => {
-      nodeId.value = isSourceHandle ? edge.target : edge.source
-      handleId.value = (isSourceHandle ? edge.targetHandle : edge.sourceHandle) ?? ''
-      type.value = isSourceHandle ? 'target' : 'source'
-      edgeUpdaterType.value = type.value
-      mouseEvent.value = event
-
-      hooks.emit.updateStart({ event, edge })
-
-      handlePointerDown(event)
-    }
-
-    const onEdgeClick = (event: MouseEvent) => {
-      const data = { event, edge }
-      if (props.selectable) {
-        nodesSelectionActive.value = false
-
-        addSelectedEdges([edge])
-      }
-      hooks.emit.click(data)
-    }
-
-    const onEdgeContextMenu = (event: MouseEvent) => hooks.emit.contextMenu({ event, edge })
-
-    const onDoubleClick = (event: MouseEvent) => hooks.emit.doubleClick({ event, edge })
-
-    const onEdgeMouseEnter = (event: MouseEvent) => hooks.emit.mouseEnter({ event, edge })
-
-    const onEdgeMouseMove = (event: MouseEvent) => hooks.emit.mouseMove({ event, edge })
-
-    const onEdgeMouseLeave = (event: MouseEvent) => hooks.emit.mouseLeave({ event, edge })
-
-    const onEdgeUpdaterSourceMouseDown = (event: MouseEvent) => {
-      updating = true
-      handleEdgeUpdater(event, true)
-    }
-
-    const onEdgeUpdaterTargetMouseDown = (event: MouseEvent) => {
-      updating = true
-      handleEdgeUpdater(event, false)
-    }
-
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (elementSelectionKeys.includes(event.key) && props.selectable) {
-        const unselect = event.key === 'Escape'
-
-        if (unselect) {
-          edgeEl.value?.blur()
-          removeSelectedEdges([findEdge(props.id)!])
-        } else {
-          addSelectedEdges([findEdge(props.id)!])
-        }
-      }
-    }
-
     return () => {
-      if (!sourceNode || !targetNode) return null
+      if (!sourceNode || !targetNode || !edge) return null
 
       let sourceNodeHandles
       if (connectionMode.value === ConnectionMode.Strict) {
@@ -170,17 +104,21 @@ const EdgeWrapper = defineComponent({
         targetPosition,
       )
 
-      const edgeClass = edge.class instanceof Function ? edge.class(edge) : edge.class
-      const edgeStyle = edge.style instanceof Function ? edge.style(edge) : edge.style
+      edge.sourceX = sourceX
+      edge.sourceY = sourceY
+      edge.targetX = targetX
+      edge.targetY = targetY
 
       return h(
         'g',
         {
           'ref': edgeEl,
+          'key': props.id,
           'data-id': props.id,
           'class': [
             'vue-flow__edge',
             `vue-flow__edge-${props.type === false ? 'default' : props.name}`,
+            noPanClassName.value,
             edgeClass,
             {
               updating: mouseOver,
@@ -251,6 +189,7 @@ const EdgeWrapper = defineComponent({
                       'centerX': sourceX,
                       'centerY': sourceY,
                       'radius': edgeUpdaterRadius.value,
+                      'type': 'source',
                       'data-type': 'source',
                     }),
                   ),
@@ -270,6 +209,7 @@ const EdgeWrapper = defineComponent({
                       'centerX': targetX,
                       'centerY': targetY,
                       'radius': edgeUpdaterRadius.value,
+                      'type': 'target',
                       'data-type': 'target',
                     }),
                   ),
@@ -278,6 +218,90 @@ const EdgeWrapper = defineComponent({
           ],
         ],
       )
+    }
+
+    function onEdgeUpdaterMouseEnter() {
+      mouseOver = true
+    }
+
+    function onEdgeUpdaterMouseOut() {
+      mouseOver = false
+    }
+
+    function onEdgeUpdate(event: MouseTouchEvent, connection: Connection) {
+      hooks.emit.update({ event, edge, connection })
+    }
+
+    function onEdgeUpdateEnd(event: MouseTouchEvent) {
+      hooks.emit.updateEnd({ event, edge })
+      updating = false
+    }
+
+    function handleEdgeUpdater(event: MouseEvent, isSourceHandle: boolean) {
+      if (event.button !== 0) return
+
+      updating = true
+
+      nodeId.value = isSourceHandle ? edge.target : edge.source
+      handleId.value = (isSourceHandle ? edge.targetHandle : edge.sourceHandle) ?? ''
+      type.value = isSourceHandle ? 'target' : 'source'
+
+      edgeUpdaterType.value = type.value
+
+      hooks.emit.updateStart({ event, edge })
+
+      handlePointerDown(event)
+    }
+
+    function onEdgeClick(event: MouseEvent) {
+      const data = { event, edge }
+      if (props.selectable) {
+        nodesSelectionActive.value = false
+
+        addSelectedEdges([edge])
+      }
+      hooks.emit.click(data)
+    }
+
+    function onEdgeContextMenu(event: MouseEvent) {
+      hooks.emit.contextMenu({ event, edge })
+    }
+
+    function onDoubleClick(event: MouseEvent) {
+      hooks.emit.doubleClick({ event, edge })
+    }
+
+    function onEdgeMouseEnter(event: MouseEvent) {
+      hooks.emit.mouseEnter({ event, edge })
+    }
+
+    function onEdgeMouseMove(event: MouseEvent) {
+      hooks.emit.mouseMove({ event, edge })
+    }
+
+    function onEdgeMouseLeave(event: MouseEvent) {
+      hooks.emit.mouseLeave({ event, edge })
+    }
+
+    function onEdgeUpdaterSourceMouseDown(event: MouseEvent) {
+      handleEdgeUpdater(event, true)
+    }
+
+    function onEdgeUpdaterTargetMouseDown(event: MouseEvent) {
+      handleEdgeUpdater(event, false)
+    }
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (elementSelectionKeys.includes(event.key) && props.selectable) {
+        const unselect = event.key === 'Escape'
+
+        if (unselect) {
+          edgeEl.value?.blur()
+          removeSelectedEdges([findEdge(props.id)!])
+        } else {
+          addSelectedEdges([findEdge(props.id)!])
+        }
+      }
     }
   },
 })

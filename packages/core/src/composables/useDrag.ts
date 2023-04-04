@@ -1,8 +1,7 @@
 import type { D3DragEvent, DragBehavior, SubjectPosition } from 'd3-drag'
 import { drag } from 'd3-drag'
 import { select } from 'd3-selection'
-import type { Ref } from 'vue'
-import type { MaybeRef } from '@vueuse/core'
+import type { ComputedRef, Ref } from 'vue'
 import type { NodeDragEvent, NodeDragItem, XYPosition } from '~/types'
 
 export type UseDragEvent = D3DragEvent<HTMLDivElement, null, SubjectPosition>
@@ -12,7 +11,8 @@ interface UseDragParams {
   onDrag: (event: NodeDragEvent['event'], currentNode: NodeDragEvent['node'], nodes: NodeDragEvent['nodes']) => void
   onStop: (event: NodeDragEvent['event'], currentNode: NodeDragEvent['node'], nodes: NodeDragEvent['nodes']) => void
   el: Ref<Element | undefined>
-  disabled?: MaybeRef<boolean>
+  disabled?: ComputedRef<boolean>
+  selectable?: ComputedRef<boolean>
   id?: string
 }
 
@@ -31,6 +31,7 @@ function useDrag(params: UseDragParams) {
       nodeExtent,
       viewport,
       autoPanOnNodeDrag,
+      nodesDraggable,
       panBy,
       findNode,
       multiSelectionActive,
@@ -39,9 +40,10 @@ function useDrag(params: UseDragParams) {
       removeSelectedElements,
       addSelectedNodes,
       updateNodePositions,
+      emits,
     } = $(useVueFlow())
 
-    const { onStart, onDrag, onStop, el, disabled = false, id } = $(params)
+    const { onStart, onDrag, onStop, el, disabled, id, selectable } = $(params)
 
     const dragging = ref(false)
 
@@ -82,6 +84,7 @@ function useDrag(params: UseDragParams) {
             const { computedPosition } = calcNextPosition(
               n,
               nextPosition,
+              emits.error,
               nodeExtent,
               n.parentNode ? findNode(n.parentNode) : undefined,
             )
@@ -140,13 +143,21 @@ function useDrag(params: UseDragParams) {
                 }
               }
 
-              if (node && selectNodesOnDrag) {
-                handleNodeClick(node, multiSelectionActive, addSelectedNodes, removeSelectedElements, $$(nodesSelectionActive))
+              if (node && selectable && selectNodesOnDrag) {
+                handleNodeClick(
+                  node,
+                  multiSelectionActive,
+                  addSelectedNodes,
+                  removeSelectedElements,
+                  $$(nodesSelectionActive),
+                  false,
+                  el as HTMLDivElement,
+                )
               }
 
               const pointerPos = getPointerPosition(event)
               lastPos = pointerPos
-              dragItems = getDragItems(nodes, pointerPos, findNode, id)
+              dragItems = getDragItems(nodes, nodesDraggable, pointerPos, findNode, id)
 
               if (dragItems.length) {
                 const [currentNode, nodes] = getEventHandlerParams({

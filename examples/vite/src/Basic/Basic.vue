@@ -14,18 +14,17 @@ const elements = ref<Elements>([
   { id: 'e1-2', source: '1', target: '2', animated: true },
   { id: 'e1-3', source: '1', target: '3' },
 ])
-const { onNodeDragStop, onConnect, addEdges, setTransform, toObject } = useVueFlow({
+const { onNodeDragStop, onEdgeClick, onConnect, addEdges, setTransform, toObject } = useVueFlow({
   minZoom: 0.2,
   maxZoom: 4,
-  connectOnClick: true,
-  fitViewOnInit: false,
 })
 
-onNodeDragStop((e) => console.log('drag stop', e))
+onNodeDragStop((e) => console.log('drag stop', e.event))
+onEdgeClick(console.log)
 onConnect((params) => addEdges([params]))
 
-const updatePos = () =>
-  elements.value.forEach((el) => {
+function updatePos() {
+  return elements.value.forEach((el) => {
     if (isNode(el)) {
       el.position = {
         x: Math.random() * 400,
@@ -33,10 +32,17 @@ const updatePos = () =>
       }
     }
   })
+}
 
-const logToObject = () => console.log(toObject())
-const resetTransform = () => setTransform({ x: 0, y: 0, zoom: 1 })
-const toggleclass = () => elements.value.forEach((el) => (el.class = el.class === 'light' ? 'dark' : 'light'))
+function logToObject() {
+  return console.log(toObject())
+}
+function resetTransform() {
+  return setTransform({ x: 0, y: 0, zoom: 1 })
+}
+function toggleclass() {
+  return elements.value.forEach((el) => (el.class = el.class === 'light' ? 'dark' : 'light'))
+}
 </script>
 
 <template>

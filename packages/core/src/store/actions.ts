@@ -21,30 +21,22 @@ import type {
 } from '~/types'
 
 export function useActions(state: State, getters: ComputedGetters): Actions {
-  const updateNodeInternals: Actions['updateNodeInternals'] = (ids) => {
-    state.hooks.updateNodeInternals.trigger(ids)
-  }
+  let fitViewOnInitDone = false
 
-  const zoomPanHelper = ref<ReturnType<typeof useZoomPanHelper>>()
+  const viewportHelper = $(useViewport(state, getters))
 
-  state.hooks.paneReady.on(({ id }) => {
-    zoomPanHelper.value = useZoomPanHelper(id)
-  })
-
-  const paneReady = async () => {
-    return new Promise<ReturnType<typeof useZoomPanHelper>>((resolve) => {
-      if (!zoomPanHelper.value) {
-        until(zoomPanHelper)
-          .not.toBeUndefined()
-          .then(() => resolve(zoomPanHelper.value!))
-      } else {
-        resolve(zoomPanHelper.value)
-      }
-    })
-  }
+  until(() => viewportHelper.initialized)
+    .toBe(true)
+    .then(() => {})
 
   const nodeIds = $computed(() => state.nodes.map((n) => n.id))
   const edgeIds = $computed(() => state.edges.map((e) => e.id))
+
+  const updateNodeInternals: Actions['updateNodeInternals'] = (ids) => {
+    const updateIds = ids ?? nodeIds ?? []
+
+    state.hooks.updateNodeInternals.trigger(updateIds)
+  }
 
   const findNode: Actions['findNode'] = (id) => {
     if (state.nodes && !nodeIds.length) return state.nodes.find((node) => node.id === id)
@@ -97,6 +89,7 @@ export function useActions(state: State, getters: ComputedGetters): Actions {
 
     if (!viewportNode) return
 
+    // todo: remove this feature again, it's not working properly
     let zoom: number
     if (state.__experimentalFeatures?.nestedFlow) {
       let viewportNodes: HTMLElement[] = [viewportNode]
@@ -133,12 +126,14 @@ export function useActions(state: State, getters: ComputedGetters): Actions {
         const doUpdate = !!(
           dimensions.width &&
           dimensions.height &&
-          (node.width !== dimensions.width || node.height !== dimensions.height || update.forceUpdate)
+          (node.dimensions.width !== dimensions.width || node.dimensions.height !== dimensions.height || update.forceUpdate)
         )
 
         if (doUpdate) {
           node.handleBounds.source = getHandleBounds('.source', update.nodeElement, zoom)
           node.handleBounds.target = getHandleBounds('.target', update.nodeElement, zoom)
+          node.dimensions = dimensions
+          node.initialized = true
 
           res.push({
             id: node.id,
@@ -150,6 +145,16 @@ export function useActions(state: State, getters: ComputedGetters): Actions {
 
       return res
     }, [])
+
+    if (state.fitViewOnInit && !fitViewOnInitDone) {
+      until(() => viewportHelper.initialized)
+        .toBe(true)
+        .then(() => {
+          viewportHelper.fitView()
+        })
+
+      fitViewOnInitDone = true
+    }
 
     if (changes.length) state.hooks.nodesChange.trigger(changes)
   }
@@ -252,12 +257,12 @@ export function useActions(state: State, getters: ComputedGetters): Actions {
     if (changedEdges.length) state.hooks.edgesChange.trigger(changedEdges)
   }
 
-  const setMinZoom: Actions['setMinZoom'] = (minZoom: any) => {
+  const setMinZoom: Actions['setMinZoom'] = (minZoom) => {
     state.d3Zoom?.scaleExtent([minZoom, state.maxZoom])
     state.minZoom = minZoom
   }
 
-  const setMaxZoom: Actions['setMaxZoom'] = (maxZoom: any) => {
+  const setMaxZoom: Actions['setMaxZoom'] = (maxZoom) => {
     state.d3Zoom?.scaleExtent([state.minZoom, maxZoom])
     state.maxZoom = maxZoom
   }
@@ -270,10 +275,8 @@ export function useActions(state: State, getters: ComputedGetters): Actions {
   const setNodeExtent: Actions['setNodeExtent'] = async (nodeExtent) => {
     state.nodeExtent = nodeExtent
 
-    if (zoomPanHelper.value) {
-      const nodeIds = getters.getNodes.value.map((n) => n.id)
-      updateNodeInternals(nodeIds)
-    }
+    const nodeIds = getters.getNodes.value.filter((n) => n.initialized).map((n) => n.id)
+    updateNodeInternals(nodeIds)
   }
 
   const setInteractive: Actions['setInteractive'] = (isInteractive) => {
@@ -283,27 +286,50 @@ export function useActions(state: State, getters: ComputedGetters): Actions {
   }
 
   const setNodes: Actions['setNodes'] = (nodes) => {
-    if (!state.initialized && !nodes.length) return
-    if (!state.nodes) state.nodes = []
+    const nextNodes = nodes instanceof Function ? nodes(state.nodes) : nodes
 
-    const curr = nodes instanceof Function ? nodes(state.nodes) : nodes
+    if (!state.initialized && !nextNodes.length) return
 
-    state.nodes = createGraphNodes(curr, findNode, state.nodes)
+    state.nodes = createGraphNodes(nextNodes, state.nodes, findNode, state.hooks.error.trigger)
   }
 
   const setEdges: Actions['setEdges'] = (edges) => {
-    if (!state.initialized && !edges.length) return
-    const curr = edges instanceof Function ? edges(state.edges) : edges
+    const nextEdges = edges instanceof Function ? edges(state.edges) : edges
 
-    state.edges = curr.reduce<GraphEdge[]>((res, edge) => {
+    if (!state.initialized && !nextEdges.length) return
+
+    const validEdges = state.isValidConnection
+      ? nextEdges.filter((edge) =>
+          state.isValidConnection!(edge, {
+            edges: state.edges,
+            sourceNode: findNode(edge.source)!,
+            targetNode: findNode(edge.target)!,
+          }),
+        )
+      : nextEdges
+
+    state.edges = validEdges.reduce<GraphEdge[]>((res, edge) => {
       const sourceNode = findNode(edge.source)!
       const targetNode = findNode(edge.target)!
 
       const missingSource = !sourceNode || typeof sourceNode === 'undefined'
       const missingTarget = !targetNode || typeof targetNode === 'undefined'
-      if (missingSource) warn(`Couldn't create edge for source id: ${edge.source}; edge id: ${edge.id}`)
-      if (missingTarget) warn(`Couldn't create edge for target id: ${edge.target}; edge id: ${edge.id}`)
-      if (missingSource || missingTarget) return res
+
+      if (missingSource && missingTarget) {
+        state.hooks.error.trigger(new VueFlowError(ErrorCode.EDGE_SOURCE_TARGET_MISSING, edge.id, edge.source, edge.target))
+      } else {
+        if (missingSource) {
+          state.hooks.error.trigger(new VueFlowError(ErrorCode.EDGE_SOURCE_MISSING, edge.id, edge.source))
+        }
+
+        if (missingTarget) {
+          state.hooks.error.trigger(new VueFlowError(ErrorCode.EDGE_TARGET_MISSING, edge.id, edge.target))
+        }
+      }
+
+      if (missingSource || missingTarget) {
+        return res
+      }
 
       const storedEdge = getters.getEdge.value(edge.id)
 
@@ -318,42 +344,69 @@ export function useActions(state: State, getters: ComputedGetters): Actions {
   }
 
   const setElements: Actions['setElements'] = (elements) => {
-    if (!state.initialized && !elements.length) return
-    const curr = elements instanceof Function ? elements([...state.nodes, ...state.edges]) : elements
+    const nextElements = elements instanceof Function ? elements([...state.nodes, ...state.edges]) : elements
 
-    setNodes(curr.filter(isNode))
-    setEdges(curr.filter(isEdge))
+    if (!state.initialized && !nextElements.length) return
+
+    setNodes(nextElements.filter(isNode))
+    setEdges(nextElements.filter(isEdge))
   }
 
   const addNodes: Actions['addNodes'] = (nodes) => {
-    const curr = nodes instanceof Function ? nodes(state.nodes) : nodes
+    const nextNodes = nodes instanceof Function ? nodes(state.nodes) : nodes
 
-    const graphNodes = createGraphNodes(curr, findNode, state.nodes)
+    const graphNodes = createGraphNodes(nextNodes, state.nodes, findNode, state.hooks.error.trigger)
+
     const changes = graphNodes.map(createAdditionChange)
 
     if (changes.length) state.hooks.nodesChange.trigger(changes)
   }
 
   const addEdges: Actions['addEdges'] = (params) => {
-    const curr = params instanceof Function ? params(state.edges) : params
+    const nextEdges = params instanceof Function ? params(state.edges) : params
 
-    const changes = curr.reduce((acc, param) => {
+    const validEdges = state.isValidConnection
+      ? nextEdges.filter((edge) =>
+          state.isValidConnection!(edge, {
+            edges: state.edges,
+            sourceNode: findNode(edge.source)!,
+            targetNode: findNode(edge.target)!,
+          }),
+        )
+      : nextEdges
+
+    const changes = validEdges.reduce((acc, param) => {
       const edge = addEdgeToStore(
         {
           ...param,
           ...state.defaultEdgeOptions,
         },
         state.edges,
+        state.hooks.error.trigger,
       )
+
       if (edge) {
         const sourceNode = findNode(edge.source)!
         const targetNode = findNode(edge.target)!
 
         const missingSource = !sourceNode || typeof sourceNode === 'undefined'
         const missingTarget = !targetNode || typeof targetNode === 'undefined'
-        if (missingSource) warn(`Couldn't create edge for source id: ${edge.source}; edge id: ${edge.id}`)
-        if (missingTarget) warn(`Couldn't create edge for target id: ${edge.target}; edge id: ${edge.id}`)
-        if (missingTarget || missingSource) return acc
+
+        if (missingSource && missingTarget) {
+          state.hooks.error.trigger(new VueFlowError(ErrorCode.EDGE_SOURCE_TARGET_MISSING, edge.id, edge.source, edge.target))
+        } else {
+          if (missingSource) {
+            state.hooks.error.trigger(new VueFlowError(ErrorCode.EDGE_SOURCE_MISSING, edge.id, edge.source))
+          }
+
+          if (missingTarget) {
+            state.hooks.error.trigger(new VueFlowError(ErrorCode.EDGE_TARGET_MISSING, edge.id, edge.target))
+          }
+        }
+
+        if (missingSource || missingTarget) {
+          return acc
+        }
 
         acc.push(
           createAdditionChange<GraphEdge>({
@@ -392,12 +445,12 @@ export function useActions(state: State, getters: ComputedGetters): Actions {
       }
     })
 
-    if (nodeChanges.length) {
-      state.hooks.nodesChange.trigger(nodeChanges)
-    }
-
     if (edgeChanges.length) {
       state.hooks.edgesChange.trigger(edgeChanges)
+    }
+
+    if (nodeChanges.length) {
+      state.hooks.nodesChange.trigger(nodeChanges)
     }
   }
 
@@ -416,7 +469,8 @@ export function useActions(state: State, getters: ComputedGetters): Actions {
     state.hooks.edgesChange.trigger(changes)
   }
 
-  const updateEdge: Actions['updateEdge'] = (oldEdge, newConnection) => updateEdgeAction(oldEdge, newConnection, state.edges)
+  const updateEdge: Actions['updateEdge'] = (oldEdge, newConnection, shouldReplaceId = true) =>
+    updateEdgeAction(oldEdge, newConnection, state.edges, findEdge, shouldReplaceId, state.hooks.error.trigger)
 
   const applyNodeChanges: Actions['applyNodeChanges'] = (changes) => applyChanges(changes, state.nodes)
 
@@ -429,30 +483,29 @@ export function useActions(state: State, getters: ComputedGetters): Actions {
       state.connectionStartHandle = startHandle
     }
 
-    if (position) state.connectionPosition = position
+    state.connectionEndHandle = null
+    state.connectionStatus = null
 
-    state.hooks.connectStart.trigger({
-      event,
-      nodeId: startHandle.nodeId,
-      handleId: startHandle.handleId,
-      handleType: startHandle.type,
-    })
+    if (position) state.connectionPosition = position
   }
 
-  const updateConnection: Actions['updateConnection'] = (position) => {
-    state.connectionPosition = position
+  const updateConnection: Actions['updateConnection'] = (position, result = null, status = null) => {
+    if (state.connectionStartHandle) {
+      state.connectionPosition = position
+      state.connectionEndHandle = result
+      state.connectionStatus = status
+    }
   }
 
   const endConnection: Actions['endConnection'] = (event, isClick) => {
     state.connectionPosition = { x: NaN, y: NaN }
+    state.connectionStatus = null
 
     if (isClick) {
       state.connectionClickStartHandle = null
     } else {
       state.connectionStartHandle = null
     }
-
-    state.hooks.connectEnd.trigger(event)
   }
 
   const getNodeRect = (
@@ -470,6 +523,7 @@ export function useActions(state: State, getters: ComputedGetters): Actions {
     return [nodeRect, node, isRectObj]
   }
 
+  // todo: rename to `findIntersectingNodes`
   const getIntersectingNodes: Actions['getIntersectingNodes'] = (nodeOrRect, partially = true, nodes) => {
     const [nodeRect, node, isRect] = getNodeRect(nodeOrRect)
 
@@ -572,8 +626,28 @@ export function useActions(state: State, getters: ComputedGetters): Actions {
     // we have to stringify/parse so objects containing refs (like nodes and edges) can potentially be saved in a storage
     return JSON.parse(
       JSON.stringify({
-        nodes: state.nodes,
-        edges: state.edges,
+        nodes: state.nodes.map((n) => {
+          // omit internal properties when exporting
+          const {
+            computedPosition: _,
+            handleBounds: __,
+            selected: ___,
+            dimensions: ____,
+            isParent: _____,
+            resizing: ______,
+            dragging: _______,
+            initialized: ________,
+            ...rest
+          } = n
+
+          return rest
+        }),
+        edges: state.edges.map((e) => {
+          // omit internal properties when exporting
+          const { selected: _, sourceNode: __, targetNode: ___, ...rest } = e
+
+          return rest
+        }),
         position: [state.viewport.x, state.viewport.y],
         zoom: state.viewport.zoom,
       } as FlowExportObject),
@@ -614,42 +688,41 @@ export function useActions(state: State, getters: ComputedGetters): Actions {
     isNodeIntersecting,
     panBy,
     fitView: async (params = { padding: 0.1 }) => {
-      const { fitView } = await paneReady()
-      fitView(params)
+      await until(() => viewportHelper.initialized).toBe(true)
+      viewportHelper.fitView(params)
     },
     zoomIn: async (options) => {
-      const { zoomIn } = await paneReady()
-      zoomIn(options)
+      await until(() => viewportHelper.initialized).toBe(true)
+      viewportHelper.zoomIn(options)
     },
     zoomOut: async (options) => {
-      const { zoomOut } = await paneReady()
-      zoomOut(options)
+      await until(() => viewportHelper.initialized).toBe(true)
+      viewportHelper.zoomOut(options)
     },
     zoomTo: async (zoomLevel, options) => {
-      const { zoomTo } = await paneReady()
-      zoomTo(zoomLevel, options)
+      await until(() => viewportHelper.initialized).toBe(true)
+      viewportHelper.zoomTo(zoomLevel, options)
     },
     setTransform: async (transform, options) => {
-      const { setTransform } = await paneReady()
-      setTransform(transform, options)
+      await until(() => viewportHelper.initialized).toBe(true)
+      viewportHelper.setTransform(transform, options)
     },
-    getTransform: () => ({
-      x: state.viewport.x,
-      y: state.viewport.y,
-      zoom: state.viewport.zoom,
-    }),
+    getTransform: () => viewportHelper.getTransform(),
     setCenter: async (x, y, options) => {
-      const { setCenter } = await paneReady()
-      setCenter(x, y, options)
+      await until(() => viewportHelper.initialized).toBe(true)
+      viewportHelper.setCenter(x, y, options)
     },
     fitBounds: async (bounds, options) => {
-      const { fitBounds } = await paneReady()
-      fitBounds(bounds, options)
+      await until(() => viewportHelper.initialized).toBe(true)
+      viewportHelper.fitBounds(bounds, options)
     },
-    project: (position) => pointToRendererPoint(position, state.viewport, state.snapToGrid, state.snapGrid),
+    project: (position) => viewportHelper.project(position),
     toObject,
     updateNodeInternals,
     $reset: () => {
+      state.edges = []
+      state.nodes = []
+
       setState(useState())
     },
     $destroy: () => {},

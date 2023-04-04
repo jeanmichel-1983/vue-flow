@@ -6,6 +6,7 @@ import type { Connection, ConnectionLineOptions, ConnectionLineType, ConnectionM
 import type { PanOnScrollMode, ViewportTransform } from './zoom'
 import type { EdgeTypesObject, NodeTypesObject } from './components'
 import type { CustomEvent } from './hooks'
+import type { ValidConnectionFunc } from '~/types/handle'
 
 export type ElementData = any
 
@@ -65,11 +66,13 @@ export enum Position {
   Bottom = 'bottom',
 }
 
+// todo: Rename to `Point`
 export interface XYPosition {
   x: number
   y: number
 }
 
+// todo: Rename to `AbsolutePoint`
 export type XYZPosition = XYPosition & { z: number }
 
 export interface Dimensions {
@@ -97,8 +100,8 @@ export enum SelectionMode {
 }
 
 export interface FlowExportObject {
-  nodes: GraphNode[]
-  edges: GraphEdge[]
+  nodes: Node[]
+  edges: Edge[]
   position: [number, number]
   zoom: number
 }
@@ -114,11 +117,12 @@ export interface FlowProps {
   nodeTypes?: NodeTypesObject
   connectionMode?: ConnectionMode
   /** @deprecated use {@link ConnectionLineOptions.type} */
-  connectionLineType?: ConnectionLineType
+  connectionLineType?: ConnectionLineType | null
   /** @deprecated use {@link ConnectionLineOptions.style} */
   connectionLineStyle?: CSSProperties | null
   connectionLineOptions?: ConnectionLineOptions
   connectionRadius?: number
+  isValidConnection?: ValidConnectionFunc | null
   deleteKeyCode?: KeyFilter | null
   selectionKeyCode?: KeyFilter | null
   multiSelectionKeyCode?: KeyFilter | null
@@ -146,7 +150,7 @@ export interface FlowProps {
   panOnScrollSpeed?: number
   panOnScrollMode?: PanOnScrollMode
   zoomOnDoubleClick?: boolean
-  /** enable this to prevent vue flow from scrolling inside the container, i.e. allow for the page to scroll */
+  /** If set to false, scrolling inside the viewport will be disabled and instead the page scroll will be used */
   preventScrolling?: boolean
   selectionMode?: SelectionMode
   edgeUpdaterRadius?: number

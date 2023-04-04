@@ -14,13 +14,20 @@ import type {
   XYPosition,
 } from './flow'
 import type { DefaultEdgeTypes, DefaultNodeTypes, EdgeComponent, NodeComponent } from './components'
-import type { Connection, ConnectionLineOptions, ConnectionLineType, ConnectionMode, Connector } from './connection'
+import type {
+  Connection,
+  ConnectionLineOptions,
+  ConnectionLineType,
+  ConnectionMode,
+  ConnectionStatus,
+  Connector,
+} from './connection'
 import type { DefaultEdgeOptions, Edge, EdgeUpdatable, GraphEdge } from './edge'
 import type { CoordinateExtent, GraphNode, Node } from './node'
 import type { D3Selection, D3Zoom, D3ZoomHandler, PanOnScrollMode, ViewportFunctions, ViewportTransform } from './zoom'
 import type { CustomEvent, FlowHooks, FlowHooksEmit, FlowHooksOn } from './hooks'
 import type { EdgeChange, NodeChange, NodeDragItem } from './changes'
-import type { StartHandle } from './handle'
+import type { ConnectingHandle, ValidConnectionFunc } from './handle'
 
 export interface UpdateNodeDimensionsParams {
   id: string
@@ -74,13 +81,16 @@ export interface State extends Omit<FlowOptions, 'id' | 'modelValue'> {
   connectionMode: ConnectionMode
   connectionLineOptions: ConnectionLineOptions
   /** @deprecated use {@link ConnectionLineOptions.type} */
-  connectionLineType: ConnectionLineType
+  connectionLineType: ConnectionLineType | null
   /** @deprecated use {@link ConnectionLineOptions.style} */
   connectionLineStyle: CSSProperties | null
-  connectionStartHandle: StartHandle | null
-  connectionClickStartHandle: StartHandle | null
+  connectionStartHandle: ConnectingHandle | null
+  connectionEndHandle: ConnectingHandle | null
+  connectionClickStartHandle: ConnectingHandle | null
   connectionPosition: XYPosition
   connectionRadius: number
+  connectionStatus: ConnectionStatus | null
+  isValidConnection: ValidConnectionFunc | null
 
   connectOnClick: boolean
   edgeUpdaterRadius: number
@@ -154,7 +164,7 @@ export type RemoveEdges = (edges: (Edge[] | string[]) | ((edges: GraphEdge[]) =>
 
 export type AddEdges = (edgesOrConnections: (Edge | Connection)[] | ((edges: GraphEdge[]) => (Edge | Connection)[])) => void
 
-export type UpdateEdge = (oldEdge: GraphEdge, newConnection: Connection) => GraphEdge | false
+export type UpdateEdge = (oldEdge: GraphEdge, newConnection: Connection, shouldReplaceId?: boolean) => GraphEdge | false
 
 export type SetState = (
   state:
@@ -166,7 +176,7 @@ export type UpdateNodePosition = (dragItems: NodeDragItem[], changed: boolean, d
 
 export type UpdateNodeDimensions = (updates: UpdateNodeDimensionsParams[]) => void
 
-export type UpdateNodeInternals = (nodeIds: string[]) => void
+export type UpdateNodeInternals = (nodeIds?: string[]) => void
 
 export type FindNode = <Data = ElementData, CustomEvents extends Record<string, CustomEvent> = any>(
   id: string,
@@ -238,9 +248,14 @@ export interface Actions extends ViewportFunctions {
   /** force update node internal data, if handle bounds are incorrect, you might want to use this */
   updateNodeInternals: UpdateNodeInternals
   /** start a connection */
-  startConnection: (startHandle: StartHandle, position?: XYPosition, event?: MouseEvent | TouchEvent, isClick?: boolean) => void
+  startConnection: (
+    startHandle: ConnectingHandle,
+    position?: XYPosition,
+    event?: MouseEvent | TouchEvent,
+    isClick?: boolean,
+  ) => void
   /** update connection position */
-  updateConnection: (position: XYPosition) => void
+  updateConnection: (position: XYPosition, result?: ConnectingHandle | null, status?: ConnectionStatus | null) => void
   /** end (or cancel) a connection */
   endConnection: (event?: MouseEvent | TouchEvent, isClick?: boolean) => void
 

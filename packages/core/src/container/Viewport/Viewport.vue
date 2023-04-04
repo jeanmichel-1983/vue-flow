@@ -44,9 +44,6 @@ let zoomedWithRightMouseButton = $ref(false)
 
 let mouseButton = $ref(0)
 
-const isRightClickPan = (pan: FlowOptions['panOnDrag'], usedButton: number) =>
-  usedButton === 2 && Array.isArray(pan) && pan.includes(2)
-
 const panKeyPressed = useKeyPress(panActivationKeyCode)
 
 const isConnecting = $computed(() => !!connectionStartHandle)
@@ -56,30 +53,6 @@ const shouldPanOnDrag = computed(() => !selectionKeyPressed && panOnDrag && panK
 const isSelecting = computed(
   () => (selectionKeyCode !== true && selectionKeyPressed) || (selectionKeyCode === true && shouldPanOnDrag.value !== true),
 )
-
-const viewChanged = (prevViewport: ViewportTransform, eventTransform: ZoomTransform): boolean =>
-  (prevViewport.x !== eventTransform.x && !isNaN(eventTransform.x)) ||
-  (prevViewport.y !== eventTransform.y && !isNaN(eventTransform.y)) ||
-  (prevViewport.zoom !== eventTransform.k && !isNaN(eventTransform.k))
-
-const eventToFlowTransform = (eventTransform: ZoomTransform): ViewportTransform => ({
-  x: eventTransform.x,
-  y: eventTransform.y,
-  zoom: eventTransform.k,
-})
-
-const setDimensions = () => {
-  if (!viewportEl.value) return
-
-  const { width, height } = getDimensions(viewportEl.value)
-
-  if (width === 0 || height === 0) warn('The Vue Flow parent container needs a width and a height to render the graph.')
-
-  dimensions.width = width || 500
-  dimensions.height = height || 500
-}
-
-const isWrappedWithClass = (event: Event, className: string | undefined) => (event.target as Element).closest(`.${className}`)
 
 let prevTransform = $ref<ViewportTransform>({
   x: 0,
@@ -102,8 +75,8 @@ onMounted(() => {
   const d3ZoomHandler = d3Selection.on('wheel.zoom')
 
   const updatedTransform = zoomIdentity
-    .translate(defaultViewport.x, defaultViewport.y)
-    .scale(clamp(defaultViewport.zoom, minZoom, maxZoom))
+    .translate(defaultViewport.x ?? 0, defaultViewport.y ?? 0)
+    .scale(clamp(defaultViewport.zoom ?? 1, minZoom, maxZoom))
 
   const extent: CoordinateExtent = [
     [0, 0],
@@ -117,16 +90,20 @@ onMounted(() => {
     d3Zoom,
     d3Selection,
     d3ZoomHandler,
-    viewport: { x: updatedTransform.x, y: updatedTransform.y, zoom: updatedTransform.k },
+    viewport: { x: constrainedTransform.x, y: constrainedTransform.y, zoom: constrainedTransform.k },
     viewportRef: viewportElement,
   })
 
-  const onKeyPress = (keyPress: boolean) => {
+  useKeyPress(selectionKeyCode, (keyPress) => {
     selectionKeyPressed = keyPress
+  })
 
-    if (keyPress && userSelectionActive && !isZoomingOrPanning) {
+  const zoomKeyPressed = useKeyPress(zoomActivationKeyCode)
+
+  watchEffect(() => {
+    if (selectionKeyPressed && userSelectionActive && !isZoomingOrPanning) {
       d3Zoom.on('zoom', null)
-    } else if (!keyPress && !userSelectionActive) {
+    } else if (!selectionKeyPressed && !userSelectionActive) {
       d3Zoom.on('zoom', (event: D3ZoomEvent<HTMLDivElement, any>) => {
         setState({ viewport: { x: event.transform.x, y: event.transform.y, zoom: event.transform.k } })
 
@@ -138,14 +115,7 @@ onMounted(() => {
         emits.move({ event, flowTransform })
       })
     }
-  }
-
-  useKeyPress(selectionKeyCode, onKeyPress)
-
-  // initialize
-  onKeyPress(false)
-
-  const zoomKeyPressed = useKeyPress(zoomActivationKeyCode)
+  })
 
   d3Zoom.on('start', (event: D3ZoomEvent<HTMLDivElement, any>) => {
     if (!event.sourceEvent) return null
@@ -192,8 +162,9 @@ onMounted(() => {
 
   watchEffect(() => {
     if (panOnScroll && !zoomKeyPressed.value && !userSelectionActive) {
-      d3Selection
-        .on('wheel', (event: WheelEvent) => {
+      d3Selection.on(
+        'wheel.zoom',
+        (event: WheelEvent) => {
           if (isWrappedWithClass(event, noWheelClassName)) {
             return false
           }
@@ -220,18 +191,22 @@ onMounted(() => {
           const deltaY = panOnScrollMode === PanOnScrollMode.Horizontal ? 0 : event.deltaY * deltaNormalize
 
           d3Zoom.translateBy(d3Selection, -(deltaX / currentZoom) * panOnScrollSpeed, -(deltaY / currentZoom) * panOnScrollSpeed)
-        })
-        .on('wheel.zoom', null)
+        },
+        { passive: false },
+      )
     } else if (typeof d3ZoomHandler !== 'undefined') {
-      d3Selection
-        .on('wheel', (event: WheelEvent) => {
+      d3Selection.on(
+        'wheel.zoom',
+        function (event: WheelEvent, d) {
           if (!preventScrolling || isWrappedWithClass(event, noWheelClassName)) {
             return null
           }
 
           event.preventDefault()
-        })
-        .on('wheel.zoom', d3ZoomHandler)
+          d3ZoomHandler.call(this, event, d)
+        },
+        { passive: false },
+      )
     }
   })
 
@@ -286,11 +261,49 @@ onMounted(() => {
     return (!event.ctrlKey || event.type === 'wheel') && buttonAllowed
   })
 })
+
+function isRightClickPan(pan: FlowOptions['panOnDrag'], usedButton: number) {
+  return usedButton === 2 && Array.isArray(pan) && pan.includes(2)
+}
+
+function viewChanged(prevViewport: ViewportTransform, eventTransform: ZoomTransform) {
+  return (
+    (prevViewport.x !== eventTransform.x && !isNaN(eventTransform.x)) ||
+    (prevViewport.y !== eventTransform.y && !isNaN(eventTransform.y)) ||
+    (prevViewport.zoom !== eventTransform.k && !isNaN(eventTransform.k))
+  )
+}
+
+function eventToFlowTransform(eventTransform: ZoomTransform): ViewportTransform {
+  return {
+    x: eventTransform.x,
+    y: eventTransform.y,
+    zoom: eventTransform.k,
+  }
+}
+
+function setDimensions() {
+  if (!viewportEl.value) return
+
+  const { width, height } = getDimensions(viewportEl.value)
+
+  if (width === 0 || height === 0) {
+    emits.error(new VueFlowError(ErrorCode.MISSING_VIEWPORT_DIMENSIONS))
+  }
+
+  dimensions.width = width || 500
+  dimensions.height = height || 500
+}
+
+function isWrappedWithClass(event: Event, className: string | undefined) {
+  return (event.target as Element).closest(`.${className}`)
+}
 </script>
 
 <script lang="ts">
 export default {
   name: 'Viewport',
+  compatConfig: { MODE: 3 },
 }
 </script>
 

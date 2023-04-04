@@ -17,6 +17,13 @@ const ariaLiveStyle: CSSProperties = {
 }
 </script>
 
+<script lang="ts">
+export default {
+  name: 'A11yDescriptions',
+  compatConfig: { MODE: 3 },
+}
+</script>
+
 <template>
   <div :id="`${ARIA_NODE_DESC_KEY}-${id}`" style="display: none">
     Press enter or space to select a node.

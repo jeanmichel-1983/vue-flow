@@ -4,6 +4,7 @@ import { MiniMapSlots } from './types'
 
 export default defineComponent({
   name: 'MiniMapNode',
+  compatConfig: { MODE: 3 },
   props: ['id', 'position', 'dimensions', 'strokeWidth', 'strokeColor', 'borderRadius', 'color', 'shapeRendering', 'type'],
   emits: ['click', 'dblclick', 'mouseenter', 'mousemove', 'mouseleave'],
   setup(props: MiniMapNodeProps, { attrs, emit }) {
@@ -13,7 +14,9 @@ export default defineComponent({
       const style = (attrs.style ?? {}) as CSSProperties
       const slot = miniMapSlots[`node-${props.type}`]
 
-      if (slot) return slot!(props)
+      if (slot) {
+        return slot(props)
+      }
 
       return h('rect', {
         id: props.id,

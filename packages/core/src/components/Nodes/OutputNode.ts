@@ -1,4 +1,4 @@
-import type { FunctionalComponent } from 'vue'
+import type { Component, FunctionalComponent } from 'vue'
 import Handle from '../Handle/Handle.vue'
 import type { NodeProps } from '~/types'
 import { Position } from '~/types'
@@ -10,12 +10,13 @@ const OutputNode: FunctionalComponent<NodeProps> = function ({
   isValidTargetPos,
 }) {
   return [
-    h(Handle, { type: 'target', position: targetPosition, connectable, isValidConnection: isValidTargetPos }),
+    h(Handle as Component, { type: 'target', position: targetPosition, connectable, isValidConnection: isValidTargetPos }),
     typeof label !== 'string' && label ? h(label) : h('div', { innerHTML: label }),
   ]
 }
 
 OutputNode.props = ['targetPosition', 'label', 'isValidTargetPos', 'connectable']
 OutputNode.inheritAttrs = false
+OutputNode.compatConfig = { MODE: 3 }
 
 export default OutputNode

@@ -10,6 +10,7 @@ import Heart from '~icons/mdi/heart'
 const breakpoints = useBreakpoints(breakpointsTailwind)
 
 const dark = ref(false)
+
 const animatedBackground = ref(false)
 
 onMounted(() => {
@@ -52,7 +53,7 @@ const initialEdges = [
     style: { strokeWidth: 4, stroke: '#0ea5e9' },
   },
 ]
-const { onNodeClick, getNodes, fitView, findNode, setEdges, updateNodeInternals } = useVueFlow({
+const { onNodeClick, getNodes, findNode, setEdges, updateNodeInternals, dimensions, onNodesInitialized } = useVueFlow({
   nodes: [
     { id: 'intro', type: 'box', position: { x: 0, y: 0 } },
     { id: 'examples', type: 'box', position: { x: -50, y: 400 } },
@@ -114,33 +115,47 @@ onNodeClick(async ({ node }) => {
   }
 })
 
+onNodesInitialized(setElements)
+
 const el = templateRef<HTMLDivElement>('el', null)
 
-const setNodes = () => {
+function setElements() {
+  const offsetX = dimensions.value.width / 2
+  const offsetY = dimensions.value.height / 4
+
   if (breakpoints.isSmaller('md')) {
     const mainNode = findNode('intro')!
 
     getNodes.value.forEach((node) => {
       switch (node.id) {
         case 'intro':
-          node.position = { x: 0, y: 0 }
+          if (node.dimensions.width >= dimensions.value.width) {
+            node.width = dimensions.value.width - 50
+          } else {
+            node.width = node.dimensions.width
+          }
+
+          node.position = {
+            x: offsetX - ((node.width as number) ?? node.dimensions.width) / 2,
+            y: offsetY - node.dimensions.height / 2,
+          }
           break
         case 'examples':
           node.position = {
-            x: mainNode.dimensions.width / 2 - node.dimensions.width / 2,
-            y: mainNode.dimensions.height * 1.5,
+            x: offsetX - node.dimensions.width / 2,
+            y: mainNode.position.y + mainNode.dimensions.height * 1.5,
           }
           break
         case 'documentation':
           node.position = {
-            x: mainNode.dimensions.width / 2 - node.dimensions.width / 2,
-            y: mainNode.dimensions.height * 2 + 50,
+            x: offsetX - node.dimensions.width / 2,
+            y: mainNode.position.y + mainNode.dimensions.height * 2 + 50,
           }
           break
         case 'acknowledgement':
           node.position = {
-            x: mainNode.dimensions.width / 2 - node.dimensions.width / 2,
-            y: mainNode.dimensions.height * 3,
+            x: offsetX - node.dimensions.width / 2,
+            y: mainNode.position.y + mainNode.dimensions.height * 3,
           }
           break
       }
@@ -177,21 +192,25 @@ const setNodes = () => {
       const mainNode = findNode('intro')!
       switch (node.id) {
         case 'intro':
-          node.position = { x: 0, y: 0 }
+          node.width = undefined
+          node.position = { x: offsetX - node.dimensions.width / 2, y: offsetY - node.dimensions.height / 2 }
           break
         case 'examples':
-          node.position = { x: -node.dimensions.width / 2, y: mainNode.dimensions.height * 1.5 }
+          node.position = {
+            x: mainNode.position.x - node.dimensions.width / 2,
+            y: mainNode.position.y + mainNode.dimensions.height * 1.5,
+          }
           break
         case 'documentation':
           node.position = {
-            x: mainNode.dimensions.width - node.dimensions.width / 2,
-            y: mainNode.dimensions.height * 1.5,
+            x: mainNode.position.x + mainNode.dimensions.width - node.dimensions.width / 2,
+            y: mainNode.position.y + mainNode.dimensions.height * 1.5,
           }
           break
         case 'acknowledgement':
           node.position = {
-            x: mainNode.dimensions.width / 2 - node.dimensions.width / 2,
-            y: mainNode.dimensions.height * 2,
+            x: offsetX - node.dimensions.width / 2,
+            y: mainNode.position.y + mainNode.dimensions.height * 2,
           }
           break
       }
@@ -201,16 +220,13 @@ const setNodes = () => {
   }
 
   nextTick(() => {
-    updateNodeInternals(getNodes.value.map((n) => n.id))
-
-    fitView()
+    updateNodeInternals()
   })
 }
-
-const { stop } = useResizeObserver(el, useDebounceFn(setNodes, 5))
+const { stop } = useResizeObserver(el, useDebounceFn(setElements, 5))
 onBeforeUnmount(stop)
 
-const scrollTo = () => {
+function scrollTo() {
   const el = document.getElementById('acknowledgement')
   if (el) {
     el.scrollIntoView({ behavior: 'smooth' })
@@ -219,7 +235,7 @@ const scrollTo = () => {
 
 const animationClassNames = ['checker-gb', 'checker-op', 'checker-yg', 'checker-ss']
 
-const shuffle = (a: any[]) => {
+function shuffle(a: any[]) {
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))
     ;[a[i], a[j]] = [a[j], a[i]]
@@ -227,7 +243,7 @@ const shuffle = (a: any[]) => {
   return a
 }
 
-const createAnimationDurations = () => {
+function createAnimationDurations() {
   return animationClassNames.map((className) => {
     const duration = 5 + Math.random() * 5
 

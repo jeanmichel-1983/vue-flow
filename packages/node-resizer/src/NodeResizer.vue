@@ -22,6 +22,7 @@ const lineControls: ControlLinePosition[] = ['top', 'right', 'bottom', 'left']
 <script lang="ts">
 export default {
   name: 'NodeResizer',
+  compatConfig: { MODE: 3 },
   inheritAttrs: false,
 }
 </script>
@@ -35,9 +36,12 @@ export default {
     :node-id="nodeId"
     :position="c"
     :variant="ResizeControlVariant.Line"
+    :keep-aspect-ratio="keepAspectRatio"
     :color="color"
     :min-width="minWidth"
     :min-height="minHeight"
+    :max-width="maxWidth"
+    :max-height="maxHeight"
     :should-resize="shouldResize"
     @resize-start="emits('resizeStart', $event)"
     @resize="emits('resize', $event)"
@@ -54,7 +58,10 @@ export default {
     :color="color"
     :min-width="minWidth"
     :min-height="minHeight"
+    :max-width="maxWidth"
+    :max-height="maxHeight"
     :should-resize="shouldResize"
+    :keep-aspect-ratio="keepAspectRatio"
     @resize-start="emits('resizeStart', $event)"
     @resize="emits('resize', $event)"
     @resize-end="emits('resizeEnd', $event)"

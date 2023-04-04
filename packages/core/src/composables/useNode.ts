@@ -11,12 +11,12 @@ export default function useNode<Data = ElementData, CustomEvents extends Record<
   const nodeId = id ?? inject(NodeId, '')
   const nodeEl = inject(NodeRef, null)
 
-  const { findNode, getEdges } = useVueFlow()
+  const { findNode, getEdges, emits } = useVueFlow()
 
-  const node = findNode<Data, CustomEvents>(nodeId)
+  const node = findNode<Data, CustomEvents>(nodeId)!
 
   if (!node) {
-    throw new Error(`[vue-flow]: useNode - Node with id ${nodeId} not found!`)
+    emits.error(new VueFlowError(ErrorCode.NODE_NOT_FOUND, nodeId))
   }
 
   return {

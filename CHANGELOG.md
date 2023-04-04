@@ -2,6 +2,553 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.18.1] - 2023-04-03
+
+[e1b7bfc](e1b7bfcfb60d44056ed37747e23c8cd49a6d5418)...[0c05490](0c05490cf3784a97a8590ec710d0619126eeed09)
+
+### Bug Fixes
+
+- Allow null values to be set ([20dfdda](20dfddaad9551f8de3ccfdfc3793e9951324a4fe))
+- Use fallback for connectable start and end ([3222e97](3222e979ffc03c8f407c4d5d5d50d5b4dad04ec6))
+- Remove duplicate event binding ([8229ee8](8229ee8748319d5f64c1d8eb368c8d8fa7283d91))
+- Use connection click start handle ([c459653](c4596530155afd1b9c28234c557c5e4ca7dd225c))
+
+### Miscellaneous Tasks
+
+- Add ([d261c09](d261c095a82af0a8a6d0975b0d83a56ac0f026f7))
+- Add ([f750d0c](f750d0cc71e68ccf8e31979bd98c27ec898041ce))
+- Add ([d0a8b9b](d0a8b9b080aa85a8a4ef8829241cd73a75b91636))
+- Add ([30b7aeb](30b7aebc6c2e642f01781e09cde2eb8941a11bcc))
+- Allow console ([0c05490](0c05490cf3784a97a8590ec710d0619126eeed09))
+
+## [1.18.0] - 2023-04-03
+
+[1ba8183](1ba8183b00652c02067fa4ca9fdf5b21e4716e0a)...[e1b7bfc](e1b7bfcfb60d44056ed37747e23c8cd49a6d5418)
+
+### Bug Fixes
+
+- Correct `isDef` typeguard ([eab9991](eab999176245d6fead4ce7621de0e5a596f2fdb1))
+
+### Features
+
+- Add `clickConnectStart` & `clickConnectEnd` events ([5a50cfd](5a50cfd90b1342fdf341aba17a68fdbaf868c09b))
+- Add `inversePan` and `zoomStep` props ([1790566](17905660d6028f2fa188bbdd153dee9463cec136))
+- Add `connectableStart` & `connectableEnd` props ([1d3908d](1d3908db6211767549e89b744d4e990e844d0183))
+- Add type to edge updater anchor class ([4bb5321](4bb532132eae02e8fe8da5d712dbc1dc8933e388))
+
+### Miscellaneous Tasks
+
+- Add dev scripts ([707aaef](707aaef5350a308c979f63a85d575491df80caf9))
+- Add ([4a0d9fe](4a0d9fe4937582d58fcd5ab5ed2a53eee268bc7a))
+- Add ([c46020f](c46020fbc26e7af4178fe0684b1e763f5606b1b0))
+- Add ([a9852bc](a9852bca128f6b5cc916842cf4b1ac110a9483d6))
+- Add ([df46137](df46137d23c0a068e8f80ff1931b4407f7a858f4))
+- Cleanup ([26a68e8](26a68e83ed8af30616b682ab3c7fb826742c381b))
+- Cleanup handle ([b1c88b3](b1c88b37929fd763ac46b3153e992891cc7d08b7))
+- Add missing name to `A11yDescriptions` ([ef94e1a](ef94e1ac19f6d5160bfb6e6577c7c29130f10dc4))
+- Add labels to tuple ([1212fac](1212fac27b8c122ea727b7b5f79e94ede246cf52))
+- Remove scripts ([d888b0c](d888b0c1ab34fc2927d4bf1bc252070a381ed418))
+- Add ([da85ad0](da85ad0aca2dd31d92ead920d6429f8ad3dd641b))
+- Add ([54cba6b](54cba6b865e74ea46cf557c5e4c4bee74846f0d3))
+- Cleanup ([a105d4c](a105d4c0bfabdd8997f822849143721a91148ea3))
+- Disable console log ([491fdb0](491fdb04e160e0082a667b1a515ea62d513f0c6e))
+- Add easy connect example ([adccf1b](adccf1b38ede40fcb15a88915cc1ddac1b8fb8bb))
+- Allow console ([e1b7bfc](e1b7bfcfb60d44056ed37747e23c8cd49a6d5418))
+
+### Refactor
+
+- Remove reactivity transform vars ([e9ff4cc](e9ff4cca9d39a79765b66c14ae1a39957c12a91c))
+- Remove reactivity transform vars ([0f02296](0f02296fcc06cdcaf603dda460434e2a375fb48f))
+- Do not remove orphaned edges from state ([63808e5](63808e5dd2fae41d18a0ebcadceb296f69751448))
+- Add connection start and end handles to store state ([4efc787](4efc7870677a2211b8cfed2ad61360cfd9b8140a))
+
+## [1.17.6] - 2023-04-02
+
+[c437e41](c437e41092699d87b770589abd211c30ec0ca0f7)...[1ba8183](1ba8183b00652c02067fa4ca9fdf5b21e4716e0a)
+
+### Bug Fixes
+
+- Reset nodes and edges before state ([6c806e8](6c806e80597e9e4f0f634b43fafc651ef328a109))
+- Hide transformation pane to avoid flickering of graph ([22accae](22accaed0d851ebb34b97a1d045d93b4ac98a86e))
+
+### Miscellaneous Tasks
+
+- Add ([fd3ed23](fd3ed2390991cb7685c6d2247d2063fec5e7cf49))
+- Add ([603aa69](603aa69ec291a8fe18ee91a0b03bc8df60d1bc25))
+
+## [1.17.5] - 2023-03-31
+
+[977ccaa](977ccaa73e38027e400397499aeaf377c99cb9ac)...[c437e41](c437e41092699d87b770589abd211c30ec0ca0f7)
+
+### Bug Fixes
+
+- Handles with connectable false still considered valid ([c4f287c](c4f287c574de1d2011be7a0b29a541bfbda2b43d))
+- Unwrap `nodesConnectable` in onClick of handle ([f62e6df](f62e6dfc5318e760e50de424e3478e828f30b3de))
+- Connection line pos not matching edge pos ([44d1a4e](44d1a4e3dfaee4a5d8d01ee4c1688455d1b3dd48))
+
+### Miscellaneous Tasks
+
+- Remove reactivity transform from handle ([d0ac0b6](d0ac0b66eacfc9eb18e3ae70063d3d030ff0a4b1))
+- Add dev script ([d615564](d6155645e45a9dd632fc8cfc3fde845b75cddc1b))
+- Cleanup ([60fefab](60fefab45b16ba26dd5b57db68c0ffc3d70394ed))
+- Add ([7fa58c9](7fa58c953939191f5dda31f414f82eebd461c3a1))
+- Add ([7772965](77729657fcbd55462a05548dc9a3403f2b1cf6d3))
+- Add ([912e14b](912e14b7caaf487331f3e9092f9e446e5a12d795))
+
+## [1.17.4] - 2023-03-31
+
+[36da593](36da593818950269f25fc367a12ea72df1bbfa19)...[977ccaa](977ccaa73e38027e400397499aeaf377c99cb9ac)
+
+### Miscellaneous Tasks
+
+- Update lint scripts ([65db65d](65db65da2f4a53cb4d614788ce8fecac720153c0))
+- Upgrade deps-dev ([9d597ff](9d597ff454584b90950f95b27991d63e03846cd3))
+- Lint files ([f61e5be](f61e5beb0274a61edc2979e866861326467ba74b))
+- Remove expiremental flag ([294c3ba](294c3ba6320217b80496443d3b044bb00b09318e))
+- Use cypress action ([09b886d](09b886da36f2917a416693e9c949b919c39d73a7))
+- Update cypress ([d154105](d15410523f54e4bed7636727c2e4f9b4d5d8277d))
+- Add ([fdf317d](fdf317d35b331abbc76f75dcc05b1b615774ea78))
+
+## [1.17.3] - 2023-03-31
+
+[4a2598f](4a2598ff670d24c5651380bb984bfd6bba7fdd0f)...[36da593](36da593818950269f25fc367a12ea72df1bbfa19)
+
+### Bug Fixes
+
+- Object assign order when parsing node/edge ([ce0002b](ce0002baea0ed0caef571afd1cd617403bb12092))
+
+### Features
+
+- Add install deps action ([d269f57](d269f57d01d8669b134f23f7c2f6344f5b4f3974))
+
+### Miscellaneous Tasks
+
+- Add engines to package.json ([cc4d0da](cc4d0da5cbcbb987edbd1642c4cbe754854c1172))
+- Use install deps action ([7dfd41b](7dfd41baa67ad592986771a914169ecc819321c6))
+- Update pnpm-lock.yaml ([c87d97e](c87d97e94e3e51bd20f5c6a1afc6b7ff22790f2f))
+- Cleanup unused env vars ([1880cdf](1880cdff8f2728adc2995da23a426f3e1e736a9e))
+- Update pinia example ([0aee70f](0aee70f6c45f76614737c2ee2555e76e459c6ed2))
+- Add ([640adf5](640adf59938f75ad99b928c895bceb47a8a43d0d))
+
+## [1.17.2] - 2023-03-29
+
+[0bc4b73](0bc4b73625ffc5da5b8576d27b1d27ea131a39ee)...[4a2598f](4a2598ff670d24c5651380bb984bfd6bba7fdd0f)
+
+### Bug Fixes
+
+- Make @wheel and @touchstart event passive ([330a3b7](330a3b7a4ff2afb672ddd8ac0f56cd42d6049a50))
+
+### Miscellaneous Tasks
+
+- Add ([51269a4](51269a4e5720b75e2a674124b2eb72a62d0b9ca0))
+
+## [1.17.1] - 2023-03-24
+
+[e7b0c4b](e7b0c4b73ed3b2085bc36b3248463a7401fdafe7)...[0bc4b73](0bc4b73625ffc5da5b8576d27b1d27ea131a39ee)
+
+### Bug Fixes
+
+- Correct return type of getIncomers & getOutgoers ([0501151](0501151e94e9a02d86e3220c273872b3976c54ef))
+- Only use visible nodes to check if nodes are initialized ([c330686](c330686833968d9482067f061579da28f1263a9f))
+- Add missing error event definition ([976f7c2](976f7c257bda2da81330616756a69451cd4c8a7d))
+
+### Miscellaneous Tasks
+
+- Add ([54ea8a0](54ea8a0d0c6c95931cb2aeb0079751db6447df65))
+- Cleanup types ([9791448](97914486db8742332f90ff5aec0f0a5197b8f286))
+- Add ([cd5fc0a](cd5fc0a7e7494a4d16831917036f794fc38b6980))
+- Add ([693601c](693601cc04a239632bb77f5c3d86d32752d97934))
+- Add ([d59cc78](d59cc784960038a765160bdbce3f6f072ee44a8c))
+- Cleanup getters ([0cdff91](0cdff913221bf9d9c9cda8eeef71837f8e6273c4))
+
+### Refactor
+
+- Check if node handle bounds exist in `getNodesInitialized` ([2944744](2944744df18ffb73b6ed175caeb2dc3ed2a434ee))
+
+## [1.17.0] - 2023-03-23
+
+[0ab0de1](0ab0de1a4d35247905e756fb4504e8419db05f79)...[e7b0c4b](e7b0c4b73ed3b2085bc36b3248463a7401fdafe7)
+
+### Bug Fixes
+
+- Remove erroneous window.stop in EdgeRendered ([c93e405](c93e4054c37fb16cb3381a24114438451ec5ed89))
+
+### Features
+
+- Add `onError` hook ([8c3f54e](8c3f54ec28873c512f07146f7ef7d4a601acf0f3))
+- Add `offset` prop ([1f49358](1f493585696f34405c178deda91767c7e55610ea))
+- Allow passing object with only id to `getConnectedEdges` ([79a0967](79a096743dd441abcc62ab12df8619224f5ed339))
+
+### Miscellaneous Tasks
+
+- Add ([5209fca](5209fcaf9dea1ee7937e7b30fd3fbc37927b7ae8))
+- Cleanup ([b101bf8](b101bf81dab99b3ad6a8ae4c394951595df8a979))
+- Cleanup ([e70ebc2](e70ebc209326033c9aead9ac6cc94b8364b26a56))
+- Add ([170f79c](170f79ce60e159ea61a0a1b93e87fb30d937d45b))
+- Cleanup ([ceb90c9](ceb90c914e6e780e5a2a358b8d92cd99b1607507))
+- Add ([17da28e](17da28e614a4beefbb4dbaf9343e0754d3049219))
+- Accept invalid handle id config ([f08af3f](f08af3fc0e06ceed6b32bad230694f87f728fb9e))
+- Add ([ad8c181](ad8c1819a7a0a573e0b50f05e9d81bf6069f2303))
+
+## [1.16.5] - 2023-03-22
+
+[12af745](12af745ac72d7d2a0099f70fc946d47c5c949bcd)...[0ab0de1](0ab0de1a4d35247905e756fb4504e8419db05f79)
+
+### Bug Fixes
+
+- Non-passive wheel event listener violation ([e7c39b0](e7c39b065d895875d5079e0bbe6d5877ac6d1b1d))
+- Wrong pkg entries ([988d4a2](988d4a2260a07e290ed9cc5c65d3f34ecaf16719))
+- Use object assign to parse node ([04598cd](04598cdcf626c536bb0d1ea3796e198e5fc76eed))
+
+### Miscellaneous Tasks
+
+- Update discord link ([80a7049](80a704984375f4619f57a48d2d4f6c64944445d7))
+- Watch files and remove alias ([95b346d](95b346d2240ebc0772343653360cf52c6656e323))
+- Add ([2f87aa8](2f87aa8578c0bdc1db2669aa06a77389a130e208))
+- Cleanup ([0fb4713](0fb4713c0bfc7a5e400604d9baa25e44bb823be5))
+- Add ([94df425](94df4258a57bb9e178abba352635618cac6739c6))
+
+## [1.16.4] - 2023-03-17
+
+[e58d24d](e58d24d9f03028342d500bf46a60c40358b93094)...[12af745](12af745ac72d7d2a0099f70fc946d47c5c949bcd)
+
+### Bug Fixes
+
+- Unwrap refs and pass props ([0476dff](0476dffa988126d6e5960894c81ab6818c81a81b))
+- Rename `parentNode` prop to `parent` ([fe46e6f](fe46e6f103201b636bde2a3d7702f33d9b8664f2))
+
+## [1.16.3] - 2023-03-17
+
+[b5d579e](b5d579ed3069166dff4a2eeebb063f435563b6b5)...[e58d24d](e58d24d9f03028342d500bf46a60c40358b93094)
+
+### Bug Fixes
+
+- Set source and target position on edge obj ([c9d643d](c9d643d7007fc09a1d73b35175ac5e18cc9be58e))
+- Use render fn for node wrapper ([d8434e6](d8434e6e8fea57c4202eaafe03cfc836788cecff))
+
+### Miscellaneous Tasks
+
+- Update custom node example ([e678f6f](e678f6fdd8659200f4b200b62f8bba24abe49c58))
+- Cleanup ([ccb302f](ccb302f1329ff32274c74b04faffd86c9753bfdb))
+
+## [1.16.2] - 2023-03-10
+
+[15016ee](15016ee21a9a0e2247444dc880c4a0542702f54f)...[b5d579e](b5d579ed3069166dff4a2eeebb063f435563b6b5)
+
+### Bug Fixes
+
+- Check if valid connection func exists ([79a6fa3](79a6fa318cb4cc62c8bba6375469567c09059365))
+- Use computed for edge class and style ([5bd1eed](5bd1eed98e76e4955380d62f8186723a3adadcde))
+
+## [1.16.1] - 2023-03-08
+
+[df87394](df87394ea4ec6733530193065550bd1646ba9f9e)...[15016ee](15016ee21a9a0e2247444dc880c4a0542702f54f)
+
+### Bug Fixes
+
+- Downgrade unplugin auto import ([2b0e6fd](2b0e6fd07273d67601accfcaf084bcb4c6fc2a0f))
+
+### Miscellaneous Tasks
+
+- Bump version ([15016ee](15016ee21a9a0e2247444dc880c4a0542702f54f))
+
+## [1.16.0] - 2023-03-08
+
+[619ce7f](619ce7f4427d2b4257c8df5ccd2217b6ed18e7d7)...[df87394](df87394ea4ec6733530193065550bd1646ba9f9e)
+
+### Bug Fixes
+
+- Force update node dimensions ([284e527](284e527a36283099baf21924370646d667f93a54))
+- Add connection target handle id to result type ([046ee41](046ee41e79b8fc1cb6d593a978a9b41d761c48b4))
+
+### Features
+
+- Export clamp util ([5297fdc](5297fdccbfbcd9e099f8aeff3eaa097c1cc474f1))
+- Add maxHeight and maxWidth props ([afc29db](afc29db489c9d765b1c48baaf5fc43cf0abb997e))
+- Store handle validation in store state ([9fb5515](9fb551569d827237cb1a5766ffb2af862e1349c2))
+- Pass targetNode and targetHandle as props ([dc23bc8](dc23bc8920d6a9d5bf33f83cc20259283c046dbe))
+- Add `isValidConnection` prop ([05bc748](05bc748100db824a23803a8607a78e1387c0d565))
+
+### Miscellaneous Tasks
+
+- Cleanup store state ([c74382f](c74382fe1d61dd7d90d866449767233c124ec630))
+- Update deps ([870c8fd](870c8fd40776fb9a4a713754258e3b89ce3a4a41))
+- Bump version ([df87394](df87394ea4ec6733530193065550bd1646ba9f9e))
+
+### Testing
+
+- Add custom connection line component test ([7519b31](7519b31b8fd5621e6ad8dd5ea3c4ac0affa826e9))
+- Add isValidConnection prop test ([929e2b5](929e2b5d049eff11f99e5f7a77c354c624d4756d))
+- Test if custom props are passed to custom connection line ([3f72713](3f72713e3ed5a1695cce9307ae13151bb78ae8bd))
+
+## [1.15.5] - 2023-03-07
+
+[2fde41e](2fde41e3d313bb2932420ca4a5c694b7cf940775)...[619ce7f](619ce7f4427d2b4257c8df5ccd2217b6ed18e7d7)
+
+### Bug Fixes
+
+- Check if handle is connectable ([f83c87d](f83c87db08f436264cb43f6da5fc44a341d8b6ba))
+- Blur node after unselect ([8cf8c51](8cf8c51e0ea372e93b81c3c665a2a0feaa476f02))
+
+### Miscellaneous Tasks
+
+- Add todo ([66e210a](66e210adf4bc76cf93bd7952acd4df0add13b7d6))
+- Cleanup deps ([36a12a6](36a12a6fe8136842f01cefee59fc77fd14c02b78))
+- Bump version ([619ce7f](619ce7f4427d2b4257c8df5ccd2217b6ed18e7d7))
+
+## [1.15.4] - 2023-03-03
+
+[77d7ba4](77d7ba4dadc1b2c4f2752937463f853953c14811)...[2fde41e](2fde41e3d313bb2932420ca4a5c694b7cf940775)
+
+### Bug Fixes
+
+- Compare internal node dimensions when updating ([da7dc3d](da7dc3de4a564be05de2657e7b60a53d6871cdc3))
+
+### Miscellaneous Tasks
+
+- Update home page ([6d19bb1](6d19bb165bf4cb0e599500bb58b7876f33b92e2c))
+- Add transition to banner numbers ([b8b9606](b8b9606496fb48f0d9aa359cdc74ed98b776c9a3))
+- Remove transitions ([3d6cb4b](3d6cb4b912309854391fc042dfcc5441af203987))
+
+## [1.15.3] - 2023-03-02
+
+[585f1e8](585f1e8d6a4c8da239d25d2dff9ad7ff8b40a3fc)...[77d7ba4](77d7ba4dadc1b2c4f2752937463f853953c14811)
+
+### Bug Fixes
+
+- Prevent selecting nodes on drag when selectable disabled ([7c026f0](7c026f084ae5a35eb8972e1d8b77dd40c0359141))
+- Wait until nodes are initialized ([c5fee5c](c5fee5c4f519e167755c1df16ff17b96a0b0e207))
+- Make shouldReplaceId arg in updateEdge optional ([f16e4db](f16e4dbadbdeb3242d91ac6e9fe31ab3cc8a5644))
+- Remove duplicate connect start/end emits ([22c4362](22c43628405567e844484b1c488986b1133837d0))
+- Wait until fitting view on init ([b509b11](b509b11bfc5e6aefc3f92f16763142e4766f6e61))
+- Remove edges before nodes ([77d7ba4](77d7ba4dadc1b2c4f2752937463f853953c14811))
+
+### Miscellaneous Tasks
+
+- Cleanup props ([320ea10](320ea10c88e7d2e78189a135ffec886d257e37ad))
+- Cleanup types ([ee8ccfe](ee8ccfe2ccebfe8555f93c9d0fa3f59b069388e7))
+- Revert edge renderer & wrapper ([addd0bb](addd0bbb67c72cf4bbdb91e48047d782f84037d0))
+- Revert node renderer & wrapper ([566ba8e](566ba8e1f66d7c0451c4b7e944a5dcf9c02c01d6))
+- Wait to find edge ([c91aac7](c91aac782d9180d9c2e07ea8053841d2f8857f06))
+- Cleanup viewport helper ([ab78dc7](ab78dc7de1c9030dcb98e965aa7010158f657464))
+
+### Refactor
+
+- Cleanup edge and node renderer ([4d535ed](4d535ed34c68b1b50fd886e7b9102b7a19078fc2))
+- Cleanup node styles ([e3e3510](e3e35109f151b3bc2acf43259005947cf5828e01))
+- Hide edges when we have no dimensions ([50ee96d](50ee96d0c16bd01a06c6d4ccb370a58ca9eaa911))
+- Update intro ([5df92c3](5df92c346303677673c1eaad4e78f33fc44047ec))
+- Trigger el functions before checking arr length ([fc86787](fc867878fa095f7188acab427391883893918552))
+
+### Testing
+
+- Update connect tests to check if events were emitted ([13db453](13db453b661b21840689afb7eb1e467f0a43fa1d))
+
+## [1.15.2] - 2023-02-24
+
+[23b084e](23b084e8d23cedc9e60224444ff865a1cf29340b)...[585f1e8](585f1e8d6a4c8da239d25d2dff9ad7ff8b40a3fc)
+
+### Bug Fixes
+
+- Cast zIndex to number in node wrapper ([79e7f3c](79e7f3ccdb42bec05a7ac6a45984c535955204b4))
+- Check if node el exists before observing ([0ffc2f1](0ffc2f1dff1e027e33eb2dcc24e2b547acfe24ac))
+- Prevent undefined being passed to update node internals ([c4b4826](c4b4826a1ac0dc60b36e38b252b7266fea89ee4f))
+- Wait until viewport helper is initialized ([f2af818](f2af8188e558b56f4f5fb2966a1f1c898af2db7f))
+- Add vite iife build file ([a5644c0](a5644c0ead4f2770d6e0042f24b8b684e3bd8834))
+- Use correct umd name for vue flow core ([06b1753](06b1753f48e2e63d9ca9d1dc2eba73b46ca1251d))
+- Correct umd export names ([93b2fd0](93b2fd04eb4a6255a519e1b6cbe53f4f7acc90a4))
+
+### Miscellaneous Tasks
+
+- Update turbo ([1762eb4](1762eb43267b3e9fecf69000bd8bbe0926fb464f))
+- Build lib when scanning ([a039ceb](a039cebdb9eb821d50f893d1b904abdb939d0757))
+- Rename qodana.yml to scan.yml ([4872740](487274089c517eb234f3a2443c3ee461c4f02da6))
+- Correct pkg deps ([3211686](3211686c400d1907fbcc79736751af6c8d8758f2))
+- Update changeset ([c1ca174](c1ca17476aa9f21305f9406604d874c84639b760))
+
+### Refactor
+
+- Use lifecycle hooks to observe node dimensions ([325efba](325efba85645ca58183a259287a06b3a16dc0727))
+
+### Testing
+
+- Add custom node test ([17c28a7](17c28a7b6dbf73768a5d002160ddb7cdae78e08e))
+- Add custom edge test ([e10663a](e10663ad5dca4df962f9c7aed902030d6e2c4244))
+
+## [1.15.1] - 2023-02-22
+
+[8c22ce0](8c22ce0bbbf32b3f683b2a5a34fae0a80088eb1f)...[23b084e](23b084e8d23cedc9e60224444ff865a1cf29340b)
+
+### Bug Fixes
+
+- Downgrade auto imports package ([4e66db6](4e66db654e9596c0e358a62e5eae24e1f571000b))
+- Remove export ([3c0d86d](3c0d86d7b4bc1b2f365876f50d46203f52715be8))
+
+## [1.15.0] - 2023-02-22
+
+[7eba916](7eba916604d164721302181a9fb5b23ca6f6ce40)...[8c22ce0](8c22ce0bbbf32b3f683b2a5a34fae0a80088eb1f)
+
+### Bug Fixes
+
+- Hide graph until nodes are ready ([226caeb](226caebd4acf852434a07ce2b9a29ab2cc47d956))
+
+### Features
+
+- Add option to avoid replacing edge id when updating ([4bf4b63](4bf4b6386ee0bb733e125e6d0ad6b10d4b8079d8))
+- Add eslint-config to tooling pkgs ([45cbdbf](45cbdbfd270d5c9160708c4eca7d3fb9fc23c6ec))
+- Add tsconfig to tooling pkgs ([2a6077e](2a6077ed9f3d31be39375d71f063ffa963852acd))
+- Add vite config to tooling pkgs ([8dd4536](8dd453634cf28738f9d31dd844db02a43eaf1bdc))
+- Use vite-config tooling pkg ([2aa1857](2aa185756b5027ad94c891afcfc263eb208e7430))
+
+### Miscellaneous Tasks
+
+- Update prevent scrolling comment ([68b07ca](68b07ca705e03049a386b4058d733f579f9b727b))
+- Update deps-dev and cleanup ([cbc29e5](cbc29e505daa5c9b45d996643bdd2de4d4b60704))
+- Update functional component types ([aafd862](aafd8622f4ec245a9c421c86f084c6ae1f067761))
+- Cleanup update edge action ([3cb6d98](3cb6d98f3f1bb021820ef74c169b2aaa4a213e73))
+- Update workspace deps-dev ([358faae](358faae21c7902675c2866bfd474c739750becf6))
+- Update changeset config ([df6f932](df6f932aac57130ffdb8bd5555fe65448e33919c))
+- Update changeset config ([7d6fb44](7d6fb443f08b9b4c4a2f50abaa0ee3c64adfab69))
+- Update changeset config ([cb6e3b1](cb6e3b1d86d01f4576bca793962a11b435d5890f))
+- Cleanup initial render ([0d9bcf4](0d9bcf4b069d5564e976239d39623a666b25ce30))
+- Cleanup unused watcher ([74f2596](74f2596f801dec6e273350f58a4c483f4fb17377))
+- Cleanup ([b5103db](b5103dbb7e12d7a928a93ff3ed7daf89c93798d8))
+- Cleanup async functions ([58a1ce8](58a1ce8e88f7ed36524621b4438b15eb16d62ba2))
+- Cleanup tsconfig ([98db749](98db749e512663d5f409309884c3ce5221bf745e))
+- Cleanup tsconfig ([0a0efb4](0a0efb4c8fddb204719c03a02c413bc47fe5645f))
+- Cleanup gitignore ([f856d3d](f856d3d04c0183defa0aa4fe8a4f5fe4c32657db))
+- Extend from turbo config ([8c22ce0](8c22ce0bbbf32b3f683b2a5a34fae0a80088eb1f))
+
+### Refactor
+
+- Fix packages together in changeset config ([578e6b4](578e6b4cfef280577063b5590c6dd202c8427eef))
+- Package names ([c60398d](c60398d0f0eb30306415fb0950b839fa25de8390))
+- Rename `e2e` to `tests` ([a3ec3b4](a3ec3b40a7d1da8a3a295db345de348a38fe1cef))
+- Package name ([5c0fb91](5c0fb912fc47a7f851608e460f53a0d4482116bd))
+- Run build and test on next-release PR ([7b590bd](7b590bd526ca2ed290bcba292977ff145c425e42))
+- Rename tooling package scope ([3df4edd](3df4edd7979ec9ffeb0820b03699461e257ef89c))
+- Remove waiting for dimensions in zoom pan helper ([d2c6b59](d2c6b592f550ec96e01fc97bd8554ad54dcf76a1))
+- Add `useViewport` for store viewport actions ([7cab68e](7cab68ed84c34778934fb28c3abd537200dfe3ef))
+- Use noop viewport helper when viewport is not ready ([dfce24a](dfce24a5faf3da3baa32334d1de48741bb06ab1a))
+- Immediately set initialized flag ([4b2a978](4b2a978e3ab20663f359a4d0d1ecd82d462aa987))
+- Use snap grid to clamp initial node pos ([fa6cb4c](fa6cb4c6d91b4b968e9ebb1610fdf722f7f9bebf))
+- Omit internal properties when using `toObject` ([10f5074](10f50740b653654873e5d6dec21927bb0a75a43d))
+- Add `release/*` to branch triggers ([eea05f9](eea05f9738cee9462b2ef728003ad8b4ff77d879))
+
+### Testing
+
+- Update min/max zoom tests ([12845eb](12845eb7e2ef3f1c62c02973d1e1a9c8e3b11acd))
+
+## [1.14.3] - 2023-02-15
+
+[2c574ac](2c574acfdf98293e79b1c915ddc4f274781209a9)...[7eba916](7eba916604d164721302181a9fb5b23ca6f6ce40)
+
+### Bug Fixes
+
+- Prevent rendering edges that have been removed ([c528726](c528726f122f65cbd05faa26a8f596de94a259a0))
+- Allow null for deprecated connection line type ([1ae5659](1ae5659b6b71695bca64ea173b6d4e9a7caab2c4))
+- Add missing straight path switch case ([b7cfec7](b7cfec78424e2044121f757a568b3dc1b8e04261))
+- Connections for handles bigger than connection radius ([8a5225a](8a5225ab80172549554fba76d8a7cbdf30fe8b21))
+- Correct checkout config ([0bc9ce1](0bc9ce109c96a6cf111e6351d8b0cf5e5aceb343))
+- Add compatConfig to all components ([b19b9a8](b19b9a871b51ebdbb5e5c2997ee77b79ef3ce679))
+
+### Examples
+
+- Cleanup examples and remove deprecated usages ([72325d4](72325d48872af5f427c71b3971b378c8be0fb3f2))
+
+### Features
+
+- Add qodana scan ([3435add](3435adddbef33c6c8a468d0adb8732ba26767a7b))
+- Add qodana.yaml ([fd18e19](fd18e19375b4fa518677ebd6dfe3b736d175bcce))
+- Add qodana scan only for master push ([0734323](073432389cd795a3d7e0b189a672817664266aca))
+
+### Miscellaneous Tasks
+
+- Cleanup build and test workflow ([5b375cd](5b375cdb62cf1c62a0f07c09bdac8a185369fe26))
+- Remove unnecessary initializers ([db0ec88](db0ec8836f6af35bf503c30a511620730d8ad0c8))
+- Cleanup props ([eb6f7a9](eb6f7a91f21987c1f2ca1ebd4a0c04f2139b2b96))
+- Remove any typecast ([9a14d8b](9a14d8b34909db042fd3455fb379e5834ca33d48))
+- Cleanup connection line ([cc83ba9](cc83ba95bd79ec8cc90f9312787c0f89270bebb4))
+
+### Refactor
+
+- Use computed to group edges ([c62c18a](c62c18a20d72db1591b69ba8e2cd3fdd7872af9b))
+- Use watcheffect to observe node dimensions ([a5ee9d9](a5ee9d978c7d6a7827804a39b23bf2a1a2b0b1a1))
+- Fit view initially when node dimensions are updated ([3f21dc7](3f21dc764dcc9fe1d28762f749c3dc411a80efa7))
+- Immediately set node dimensions in store action ([9d34251](9d342511f503483b253fdb9614695eb9d9858720))
+- Use v-bind to pass connection line props ([ea0696c](ea0696c566e063266d15b7630a725feef38a90da))
+- Use `MouseTouchEvent` for `EdgeMouseEvent` type ([09c56a6](09c56a60b316a2c0e43d6cbe084b31d1c0c51976))
+- Pass original event to edge update event params ([83636d4](83636d4e53282f8972050c2170407cc5efd1a20e))
+- Set `user-select: none` for edge labels ([b6f7cde](b6f7cde655e2d161380343718cde6f0e1485b610))
+- Run publish action for next-release branch ([757fa1b](757fa1be72cd38039a6f66929a03225d8287c913))
+- Change commit title ([2de90c7](2de90c77432233004909e7b3061b5972c06c7403))
+
+## [1.14.2] - 2023-02-07
+
+[aa59713](aa59713bba61ee41353cbbcb83ed470a5b4ccdf1)...[2c574ac](2c574acfdf98293e79b1c915ddc4f274781209a9)
+
+### Bug Fixes
+
+- Exclude hidden nodes in fitView when includeHiddenNodes is false ([26f16b7](26f16b75f8868138f121af2d42933f9eaea519ad))
+- Avoid triggering edge update when mouse btn is not left ([f849999](f849999d20f696c2af075fb1e7de08e9ca2e0669))
+
+### Miscellaneous Tasks
+
+- Replace `default-zoom` with `defaut-viewport` ([0192c65](0192c6515f34a6775f2b9d9380be85b0d8aeb619))
+- Use default values when defaultViewport values are missing ([77de369](77de369a3ff5663bb95cda5b8d767c892563944a))
+- Update auto-import file ([26b92db](26b92dbe8b63e651cbc3405e1cb86d48784088c9))
+- Cleanup and replace `const` with `function` ([bb2c4f4](bb2c4f449ab083c38a57846d85165c5f8c609a49))
+- Cleanup useZoomPanHelper ([35daa95](35daa95c229d768ac7030f799e50b5842baeef2e))
+- Next release ([2c574ac](2c574acfdf98293e79b1c915ddc4f274781209a9))
+
+### Refactor
+
+- Apply min width and height with aspect ratio ([49aef1e](49aef1ec88aa64662aa3772601e196e04b08db82))
+
+## [1.14.1] - 2023-02-06
+
+[6f02480](6f02480b173115c6702bebcfce56758ed588bc08)...[aa59713](aa59713bba61ee41353cbbcb83ed470a5b4ccdf1)
+
+### Bug Fixes
+
+- Check if prevClosestHandle exists in pointer up ([c800a86](c800a86893ac4877030e91ca5da3660f019d5fcc))
+
+### Miscellaneous Tasks
+
+- Next release ([aa59713](aa59713bba61ee41353cbbcb83ed470a5b4ccdf1))
+
+### Refactor
+
+- Cleanup `useHandle` and set status on actions ([619f4bf](619f4bf3e7f60be8a015dfb2c575602f52f4938a))
+
+## [1.14.0] - 2023-02-05
+
+[8328d78](8328d78ff29309a1213f1e14bd4778726233bc8a)...[6f02480](6f02480b173115c6702bebcfce56758ed588bc08)
+
+### Bug Fixes
+
+- Ios connection error ([f2f3e70](f2f3e70ebe559ead80feaad7012d7985951c8c9e))
+- Avoid undraggable selected nodes being dragged ([c7e8bd7](c7e8bd7630d14c875a8f0ad84ba17a7f6b5ddeb3))
+
+### Features
+
+- Add `shouldResize` option ([222b58a](222b58afd45aac9c33ade7bd29bb4fbd41721c10))
+- Add connection status to connection lines ([c36cf59](c36cf59a80e0f8c7fc8fc73a275e58c68aac06c0))
+- Add vue flow error class ([dc60e11](dc60e112a10c10c01a32ae820842ee03c6c32996))
+
+### Miscellaneous Tasks
+
+- Add comment for panBy action ([3c2255b](3c2255ba52057c8e6bbc6794a9a29952dc5da98e))
+- Fix github issues links ([1697e96](1697e965087c821e65d30ef53ffc944d9d5e1530))
+- Cleanup ([7f26253](7f26253be1bc461ecd477a9355bea8bd72a6311a))
+- Cleanup useVueFlow ([1448543](14485439934f087a483a0fb152dcde220e3159f9))
+- Next release ([6f02480](6f02480b173115c6702bebcfce56758ed588bc08))
+
+### Refactor
+
+- Remove unnecessary warning ([c72e75d](c72e75db38e4c12628b1daa11377324f4ea0e1ae))
+- Use opposite position for connection lines ([6c00909](6c00909f469ede75cd50cd2cbb52d15bcd3ec72b))
+
 ## [1.13.2] - 2023-02-02
 
 [b2cc3f5](b2cc3f5cf9c118b6a9e2208a008194084131eb56)...[8328d78](8328d78ff29309a1213f1e14bd4778726233bc8a)

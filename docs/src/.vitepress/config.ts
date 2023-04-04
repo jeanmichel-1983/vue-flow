@@ -1,5 +1,5 @@
-import { resolve } from 'path'
-import { readdirSync, statSync } from 'fs'
+import { resolve } from 'node:path'
+import { readdirSync, statSync } from 'node:fs'
 import type { DefaultTheme, HeadConfig } from 'vitepress'
 import { defineConfigWithTheme } from 'vitepress'
 import WindiCSS from 'vite-plugin-windicss'
@@ -17,7 +17,7 @@ function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
-const typedocSidebarEntries = (): DefaultTheme.SidebarGroup[] => {
+function typedocSidebarEntries(): DefaultTheme.SidebarGroup[] {
   const filePath = resolve(__dirname, '../typedocs')
 
   const docsModules = readdirSync(filePath).filter((name) => statSync(`${filePath}/${name}`).isDirectory())
@@ -38,7 +38,7 @@ const typedocSidebarEntries = (): DefaultTheme.SidebarGroup[] => {
   })
 }
 
-const changelogSidebarEntries = (): DefaultTheme.SidebarGroup[] => {
+function changelogSidebarEntries(): DefaultTheme.SidebarGroup[] {
   return [
     {
       text: 'CHANGELOG',
@@ -107,7 +107,7 @@ export default defineConfigWithTheme<DefaultTheme.Config>({
     },
     socialLinks: [
       { icon: 'github', link: 'https://github.com/bcakmakoglu/vue-flow' },
-      { icon: 'discord', link: 'https://discord.gg/F4v6qE4Fuq' },
+      { icon: 'discord', link: 'https://discord.gg/rwt6CBk4b5' },
     ],
     algolia: {
       appId: 'F7BJNSM4M5',

@@ -9,7 +9,6 @@ const {
   nodesFocusable,
   elementsSelectable,
   nodesConnectable,
-  nodes,
   getNodes,
   getNodesInitialized,
   getNodeTypes,
@@ -17,14 +16,9 @@ const {
   emits,
 } = $(useVueFlow())
 
-const draggable = (d?: boolean) => (typeof d === 'undefined' ? nodesDraggable : d)
-const selectable = (s?: boolean) => (typeof s === 'undefined' ? elementsSelectable : s)
-const connectable = (c?: HandleConnectable) => (typeof c === 'undefined' ? nodesConnectable : c)
-const focusable = (f?: boolean) => (typeof f === 'undefined' ? nodesFocusable : f)
-
 let resizeObserver = $ref<ResizeObserver>()
 
-until(() => nodes.length > 0 && getNodesInitialized.length === nodes.length)
+until(() => getNodes.length > 0 && getNodesInitialized.length === getNodes.length)
   .toBe(true)
   .then(() => {
     nextTick(() => {
@@ -34,12 +28,13 @@ until(() => nodes.length > 0 && getNodesInitialized.length === nodes.length)
 
 onMounted(() => {
   resizeObserver = new ResizeObserver((entries) => {
-    const updates = entries.map((entry: ResizeObserverEntry) => {
+    const updates = entries.map((entry) => {
       const id = entry.target.getAttribute('data-id') as string
 
       return {
         id,
         nodeElement: entry.target as HTMLDivElement,
+        forceUpdate: true,
       }
     })
 
@@ -49,7 +44,20 @@ onMounted(() => {
 
 onBeforeUnmount(() => resizeObserver?.disconnect())
 
-const getType = (type?: string, template?: GraphNode['template']) => {
+function draggable(nodeDraggable?: boolean) {
+  return typeof nodeDraggable === 'undefined' ? nodesDraggable : nodeDraggable
+}
+function selectable(nodeSelectable?: boolean) {
+  return typeof nodeSelectable === 'undefined' ? elementsSelectable : nodeSelectable
+}
+function connectable(nodeConnectable?: HandleConnectable) {
+  return typeof nodeConnectable === 'undefined' ? nodesConnectable : nodeConnectable
+}
+function focusable(nodeFocusable?: boolean) {
+  return typeof nodeFocusable === 'undefined' ? nodesFocusable : nodeFocusable
+}
+
+function getType(type?: string, template?: GraphNode['template']) {
   const name = type || 'default'
   let nodeType = template ?? getNodeTypes[name]
   const instance = getCurrentInstance()
@@ -66,7 +74,7 @@ const getType = (type?: string, template?: GraphNode['template']) => {
 
   const slot = slots?.[`node-${name}`]
   if (!slot) {
-    warn(`Node type "${type}" not found and no node-slot detected. Using fallback type "default".`)
+    emits.error(new VueFlowError(ErrorCode.NODE_TYPE_MISSING, nodeType))
     return false
   }
 
@@ -77,6 +85,7 @@ const getType = (type?: string, template?: GraphNode['template']) => {
 <script lang="ts">
 export default {
   name: 'Nodes',
+  compatConfig: { MODE: 3 },
 }
 </script>
 

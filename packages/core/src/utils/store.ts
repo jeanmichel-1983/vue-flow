@@ -1,43 +1,61 @@
-import type { Actions, Connection, Edge, GraphEdge, GraphNode, Node } from '~/types'
+import type { Actions, Connection, Edge, GraphEdge, GraphNode, Node, State } from '~/types'
 
-export const isDef = <T>(val: T): val is NonNullable<T> => typeof unref(val) !== 'undefined'
+type NonUndefined<T> = T extends undefined ? never : T
 
-export const addEdgeToStore = (edgeParams: Edge | Connection, edges: Edge[]) => {
+export function isDef<T>(val: T): val is NonUndefined<T> {
+  const unrefVal = unref(val)
+
+  return typeof unrefVal !== 'undefined'
+}
+
+export function addEdgeToStore(edgeParams: Edge | Connection, edges: Edge[], onError: State['hooks']['error']['trigger']) {
   if (!edgeParams.source || !edgeParams.target) {
-    warn("Can't create edge. An edge needs a source and a target.")
+    onError(new VueFlowError(ErrorCode.EDGE_INVALID, (edgeParams as Edge).id))
     return false
   }
 
   let edge
   if (isEdge(edgeParams)) {
-    edge = { ...edgeParams }
+    edge = edgeParams
   } else {
     edge = {
       ...edgeParams,
       id: getEdgeId(edgeParams),
     } as Edge
   }
+
   edge = parseEdge(edge)
+
   if (connectionExists(edge, edges)) return false
+
   return edge
 }
 
-export const updateEdgeAction = (edge: GraphEdge, newConnection: Connection, edges: GraphEdge[]) => {
+export function updateEdgeAction(
+  edge: GraphEdge,
+  newConnection: Connection,
+  edges: GraphEdge[],
+  findEdge: Actions['findEdge'],
+  shouldReplaceId: boolean,
+  onError: State['hooks']['error']['trigger'],
+) {
   if (!newConnection.source || !newConnection.target) {
-    warn("Can't create new edge. An edge needs a source and a target.")
+    onError(new VueFlowError(ErrorCode.EDGE_INVALID, edge.id))
     return false
   }
 
-  const foundEdge = edges.find((e) => isGraphEdge(e) && e.id === edge.id)
+  const foundEdge = findEdge(edge.id)
 
   if (!foundEdge) {
-    warn(`The old edge with id=${edge.id} does not exist.`)
+    onError(new VueFlowError(ErrorCode.EDGE_NOT_FOUND, edge.id))
     return false
   }
 
+  const { id, ...rest } = edge
+
   const newEdge = {
-    ...edge,
-    id: getEdgeId(newConnection),
+    ...rest,
+    id: shouldReplaceId ? getEdgeId(newConnection) : id,
     source: newConnection.source,
     target: newConnection.target,
     sourceHandle: newConnection.sourceHandle,
@@ -49,7 +67,12 @@ export const updateEdgeAction = (edge: GraphEdge, newConnection: Connection, edg
   return newEdge
 }
 
-export const createGraphNodes = (nodes: Node[], findNode: Actions['findNode'], currGraphNodes: GraphNode[]) => {
+export function createGraphNodes(
+  nodes: Node[],
+  currGraphNodes: GraphNode[],
+  findNode: Actions['findNode'],
+  onError: State['hooks']['error']['trigger'],
+) {
   const parentNodes: Record<string, true> = {}
 
   const graphNodes = nodes.map((node) => {
@@ -65,13 +88,13 @@ export const createGraphNodes = (nodes: Node[], findNode: Actions['findNode'], c
     return parsed
   })
 
-  graphNodes.forEach((node) => {
-    const nextNodes = [...graphNodes, ...currGraphNodes]
+  const nextNodes = [...graphNodes, ...currGraphNodes]
 
+  graphNodes.forEach((node) => {
     const parentNode = nextNodes.find((n) => n.id === node.parentNode)
 
     if (node.parentNode && !parentNode) {
-      warn(`Parent node ${node.parentNode} not found`)
+      onError(new VueFlowError(ErrorCode.NODE_MISSING_PARENT, node.id, node.parentNode))
     }
 
     if (node.parentNode || parentNodes[node.id]) {

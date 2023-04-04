@@ -37,6 +37,8 @@ export type Connector = (
   params: Connection,
 ) => Promise<(Connection & Partial<Edge>) | false> | ((Connection & Partial<Edge>) | false)
 
+export type ConnectionStatus = 'valid' | 'invalid'
+
 /** The source nodes params when connection is initiated */
 export interface OnConnectStartParams {
   /** Source node id */
@@ -66,16 +68,18 @@ export interface ConnectionLineProps {
   targetY: number
   /** Target position of the connection line */
   targetPosition: Position
-  /** the shape of the connection line when active */
-  connectionLineType: ConnectionLineType
-  /** extra styles */
-  connectionLineStyle: CSSProperties
   /** The source node of the connection line */
   sourceNode: GraphNode
-  /** The source handle element of the connection line */
+  /** The source handle element (not the DOM element) of the connection line */
   sourceHandle: HandleElement
+  /** The target node of the connection line */
+  targetNode: GraphNode | null
+  /** The target handle element (not the DOM element) of the connection line */
+  targetHandle: HandleElement | null
   /** marker url */
   markerStart: string
   /** marker url */
   markerEnd: string
+  /** status of the connection (valid, invalid) */
+  connectionStatus: ConnectionStatus
 }

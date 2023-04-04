@@ -46,6 +46,7 @@ export {
   getMarkerId,
   getBoundsofRects,
   connectionExists,
+  clamp,
 } from './utils/graph'
 
 /**
@@ -69,5 +70,7 @@ export { default as useNode } from './composables/useNode'
 export { default as useEdge } from './composables/useEdge'
 
 export { useGetPointerPosition } from './composables/useGetPointerPosition'
+
+export { VueFlowError, ErrorCode } from './utils/errors'
 
 export * from './types'

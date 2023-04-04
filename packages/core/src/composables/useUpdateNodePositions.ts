@@ -1,7 +1,8 @@
 import type { NodeDragItem, XYPosition } from '~/types'
 
 function useUpdateNodePositions() {
-  const { getSelectedNodes, nodeExtent, updateNodePositions, findNode, snapGrid, snapToGrid } = useVueFlow()
+  const { getSelectedNodes, nodeExtent, updateNodePositions, findNode, snapGrid, snapToGrid, nodesDraggable, emits } =
+    useVueFlow()
 
   return (positionDiff: XYPosition, isShiftPressed = false) => {
     // by default a node moves 5px on each key press, or 20px if shift is pressed
@@ -13,24 +14,27 @@ function useUpdateNodePositions() {
     const positionDiffX = positionDiff.x * xVelo * factor
     const positionDiffY = positionDiff.y * yVelo * factor
 
-    const nodeUpdates = getSelectedNodes.value.map((n) => {
-      const nextPosition = { x: n.computedPosition.x + positionDiffX, y: n.computedPosition.y + positionDiffY }
+    const nodeUpdates = getSelectedNodes.value
+      .filter((n) => n.draggable || (nodesDraggable && typeof n.draggable === 'undefined'))
+      .map((n) => {
+        const nextPosition = { x: n.computedPosition.x + positionDiffX, y: n.computedPosition.y + positionDiffY }
 
-      const { computedPosition } = calcNextPosition(
-        n,
-        nextPosition,
-        nodeExtent.value,
-        n.parentNode ? findNode(n.parentNode) : undefined,
-      )
+        const { computedPosition } = calcNextPosition(
+          n,
+          nextPosition,
+          emits.error,
+          nodeExtent.value,
+          n.parentNode ? findNode(n.parentNode) : undefined,
+        )
 
-      return {
-        id: n.id,
-        position: computedPosition,
-        from: n.position,
-        distance: { x: positionDiff.x, y: positionDiff.y },
-        dimensions: n.dimensions,
-      } as NodeDragItem
-    })
+        return {
+          id: n.id,
+          position: computedPosition,
+          from: n.position,
+          distance: { x: positionDiff.x, y: positionDiff.y },
+          dimensions: n.dimensions,
+        } as NodeDragItem
+      })
 
     updateNodePositions(nodeUpdates, true, false)
   }
